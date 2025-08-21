@@ -1,9 +1,10 @@
-// tailwind.config.js
 module.exports = {
-  darkMode: "media", // class ki jagah media
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  darkMode: 'class', // or 'media'
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}", // make sure paths cover your deployed code
+  ],
   theme: {
     extend: {},
   },
   plugins: [],
-}
+};
