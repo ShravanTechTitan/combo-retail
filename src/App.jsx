@@ -1,21 +1,21 @@
 import { Routes, Route, Router } from "react-router-dom";
-import Home from "./pages/Home";
-import DashboardLayout from "./pages/DashbordPages/DashboardLayout";
-import Combos from "./pages/DashbordPages/Combos";
-import ComboPage from "./pages/ComboPage";
-import Mobiles from "./pages/Mobiles";
-import Subscriptions from "./pages/Subscriptions";
-import Login from "./pages/login";
+import Home from "./pages/Home.jsx";
+import DashboardLayout from "./pages/DashbordPages/DashboardLayout.jsx";
+import Combos from "./pages/DashbordPages/Combos.jsx";
+import ComboPage from "./pages/ComboPage.jsx";
+import Mobiles from "./pages/Mobiles.jsx";
+import Subscriptions from "./pages/Subscriptions.jsx";
+import Login from "./pages/login.jsx";
 import { useEffect, useState } from "react";
 import {jwtDecode} from "jwt-decode";
-import ModelPage from "./pages/ModelPage";
-import Categories from "./pages/DashbordPages/Categories";
+import ModelPage from "./pages/ModelPage.jsx";
+import Categories from "./pages/DashbordPages/Categories.jsx";
 
-import Products from "./pages/DashbordPages/Products";
-import BrandPage from "./pages/DashbordPages/BrandPage";
-import Model from "./pages/DashbordPages/ModelPage";
-import ModelDetails from "./pages/userpages/ModelDetails";
-import PartDetails from "./pages/userpages/PartDetails";
+import Products from "./pages/DashbordPages/Products.jsx";
+import BrandPage from "./pages/DashbordPages/BrandPage.jsx";
+import Model from "./pages/DashbordPages/ModelPage.jsx";
+import ModelDetails from "./pages/userpages/ModelDetails.jsx";
+import PartDetails from "./pages/userpages/PartDetails.jsx";
 
 // App.jsx
 

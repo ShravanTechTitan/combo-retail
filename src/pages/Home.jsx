@@ -2,7 +2,7 @@ import { useState } from "react";
 import ComboCard from "../components/ComboCard";
 import SearchBar from "../components/SearchBar";
 import Header from "../components/Header";
-import { combos } from "../data";
+
 import { useNavigate } from "react-router-dom";
 
 const modal = [
