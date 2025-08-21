@@ -5,7 +5,7 @@ import Combos from "./pages/DashbordPages/Combos.jsx";
 import ComboPage from "./pages/ComboPage.jsx";
 import Mobiles from "./pages/Mobiles.jsx";
 import Subscriptions from "./pages/Subscriptions.jsx";
-import Login from "./pages/login.jsx";
+import Login from "./pages/Login.jsx";
 import { useEffect, useState } from "react";
 import {jwtDecode} from "jwt-decode";
 import ModelPage from "./pages/ModelPage.jsx";
