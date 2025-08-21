@@ -21,10 +21,7 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  const filteredCombos = combos.filter((combo) =>
-    combo.name.toLowerCase().includes(search.toLowerCase())
-  );
-
+ 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Header */}
