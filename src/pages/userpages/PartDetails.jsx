@@ -25,42 +25,7 @@ const modelData = {
           price: "₹1,599",
           supportedModels: ["A14", "A34", "M14"],
         },
-        {
-          id: "B345",
-          name: "Samsung Battery B345",
-          price: "₹1,199",
-          supportedModels: ["F14", "F15", "F23",],
-        },
-        {
-          id: "B410",
-          name: "Samsung Battery B410",
-          price: "₹1,399",
-          supportedModels: ["S20", "S20+", "S20 Ultra"],
-        },
-        {
-          id: "B512",
-          name: "Samsung Battery B512",
-          price: "₹1,599",
-          supportedModels: ["A14", "A34", "M14"],
-        },
-        {
-          id: "B345",
-          name: "Samsung Battery B345",
-          price: "₹1,199",
-          supportedModels: ["F14", "F15", "F23",],
-        },
-        {
-          id: "B410",
-          name: "Samsung Battery B410",
-          price: "₹1,399",
-          supportedModels: ["S20", "S20+", "S20 Ultra"],
-        },
-        {
-          id: "B512",
-          name: "Samsung Battery B512",
-          price: "₹1,599",
-          supportedModels: ["A14", "A34", "M14"],
-        },
+       
       ],
       display: [
         {
@@ -81,60 +46,7 @@ const modelData = {
           price: "₹3,499",
           supportedModels: ["A54", "A72", "M54"],
         },
-        {
-          id: "D200",
-          name: "Samsung AMOLED Display D200",
-          price: "₹2,999",
-          supportedModels: ["S20", "S20+"],
-        },
-        {
-          id: "D201",
-          name: "Samsung LCD Display D201",
-          price: "₹1,999",
-          supportedModels: ["F14", "F15", "F23"],
-        },
-        {
-          id: "D350",
-          name: "Samsung Super AMOLED Display D350",
-          price: "₹3,499",
-          supportedModels: ["A54", "A72", "M54"],
-        },
-        {
-          id: "D200",
-          name: "Samsung AMOLED Display D200",
-          price: "₹2,999",
-          supportedModels: ["S20", "S20+"],
-        },
-        {
-          id: "D201",
-          name: "Samsung LCD Display D201",
-          price: "₹1,999",
-          supportedModels: ["F14", "F15", "F23"],
-        },
-        {
-          id: "D350",
-          name: "Samsung Super AMOLED Display D350",
-          price: "₹3,499",
-          supportedModels: ["A54", "A72", "M54"],
-        },
-        {
-          id: "D200",
-          name: "Samsung AMOLED Display D200",
-          price: "₹2,999",
-          supportedModels: ["S20", "S20+"],
-        },
-        {
-          id: "D201",
-          name: "Samsung LCD Display D201",
-          price: "₹1,999",
-          supportedModels: ["F14", "F15", "F23"],
-        },
-        {
-          id: "D350",
-          name: "Samsung Super AMOLED Display D350",
-          price: "₹3,499",
-          supportedModels: ["A54", "A72", "M54"],
-        },
+    
       ],
     },
   },

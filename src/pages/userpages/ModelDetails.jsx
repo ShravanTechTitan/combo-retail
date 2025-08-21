@@ -15,16 +15,7 @@ export const modelData = {
         { id: 2, model: "S20", name: "Samsung S20 Pro Display", price: "₹4,999" },
         { id: 3, model: "F14", name: "Samsung F14 Display", price: "₹1,999" },
       ],
-      display: [
-        { id: 1, model: "S20", name: "Samsung S20 Basic Display", price: "₹2,999" },
-        { id: 2, model: "S20", name: "Samsung S20 Pro Display", price: "₹4,999" },
-        { id: 3, model: "F14", name: "Samsung F14 Display", price: "₹1,999" },
-      ],
-      display: [
-        { id: 1, model: "S20", name: "Samsung S20 Basic Display", price: "₹2,999" },
-        { id: 2, model: "S20", name: "Samsung S20 Pro Display", price: "₹4,999" },
-        { id: 3, model: "F14", name: "Samsung F14 Display", price: "₹1,999" },
-      ],
+    
     },
   },
   iphone: {
