@@ -33,7 +33,8 @@ export default function Home() {
       </div>
 
       {/* Model Cards */}
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 bg-gray-50 dark:bg-gray-900">
+
         {modal.map((m) => (
           <div
             key={m.id}
