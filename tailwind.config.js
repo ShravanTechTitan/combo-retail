@@ -1,7 +1,8 @@
 module.exports = {
-  darkMode: 'class', // or 'media'
+  darkMode: 'media', // follow system preference
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}", // make sure paths cover your deployed code
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./public/index.html",
   ],
   theme: {
     extend: {},
