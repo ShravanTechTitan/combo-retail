@@ -1,7 +1,7 @@
 import { Routes, Route, Router } from "react-router-dom";
 import Home from "./pages/Home.jsx";
-import DashboardLayout from "./pages/DashbordPages/DashboardLayout.jsx";
-import Combos from "./pages/DashbordPages/Combos.jsx";
+import DashboardLayout from "./pages/DashboardLayout.jsx";
+import Combos from "./pages/Combos.jsx";
 import ComboPage from "./pages/ComboPage.jsx";
 import Mobiles from "./pages/Mobiles.jsx";
 import Subscriptions from "./pages/Subscriptions.jsx";
@@ -9,13 +9,13 @@ import Login from "./pages/Login.jsx";
 import { useEffect, useState } from "react";
 import {jwtDecode} from "jwt-decode";
 import ModelPage from "./pages/ModelPage.jsx";
-import Categories from "./pages/DashbordPages/Categories.jsx";
+import Categories from "./pages/Categories.jsx";
 
-import Products from "./pages/DashbordPages/Products.jsx";
-import BrandPage from "./pages/DashbordPages/BrandPage.jsx";
-import Model from "./pages/DashbordPages/ModelPage.jsx";
-import ModelDetails from "./pages/userpages/ModelDetails.jsx";
-import PartDetails from "./pages/userpages/PartDetails.jsx";
+import Products from "./pages/Products.jsx";
+import BrandPage from "./pages/BrandPage.jsx";
+import Model from "./pages/ModelPage.jsx";
+import ModelDetails from "./pages/ModelDetails.jsx";
+import PartDetails from "./pages/PartDetails.jsx";
 
 // App.jsx
 

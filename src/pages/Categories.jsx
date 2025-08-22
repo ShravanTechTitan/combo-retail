@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import InputField from "../../components/dashboardComponents/InputField";
-import ActionButtons from "../../components/dashboardComponents/ActionButtons";
+import InputField from "../components/dashboardComponents/InputField";
+import ActionButtons from "../components/dashboardComponents/ActionButtons";
 
 export default function CategoryPage() {
   const [categories, setCategories] = useState([]);

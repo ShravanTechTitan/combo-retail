@@ -1,8 +1,8 @@
 // pages/BrandPage.jsx
 import React, { useState } from "react";
-import InputField from "../../components/dashboardComponents/InputField";
-import FormModal from "../../components/dashboardComponents/FormModal";
-import ActionButtons from "../../components/dashboardComponents/ActionButtons";
+import InputField from "../components/dashboardComponents/InputField";
+import FormModal from "../components/dashboardComponents/FormModal";
+import ActionButtons from "../components/dashboardComponents/ActionButtons";
 
 export default function BrandPage() {
   const [brands, setBrands] = useState([]);

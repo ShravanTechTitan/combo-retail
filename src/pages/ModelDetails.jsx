@@ -1,6 +1,6 @@
 import { useParams,useNavigate } from "react-router-dom";
-import Header from "../../components/Header";
-import SearchBar from "../../components/SearchBar";
+import Header from "../components/Header";
+import SearchBar from "../components/SearchBar";
 export const modelData = {
   samsung: {
     name: "Samsung",
