@@ -51,7 +51,7 @@ export default function ModelPage() {
   };
 
   return (
-    <div className="p-6 w-[90%] mx-auto text-white">
+    <div className="p-6 w-[90%] mx-auto min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
       <div className="flex justify-between mb-4">
         <h1 className="text-2xl font-bold">Models</h1>
         <button
@@ -60,15 +60,15 @@ export default function ModelPage() {
             setEditingId(null);
             setShowForm(true);
           }}
-          className="px-4 py-2 bg-indigo-600 rounded-lg"
+          className="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg transition-colors duration-300"
         >
           Add Model
         </button>
       </div>
 
       {/* Table */}
-      <table className="w-full text-left border border-gray-700">
-        <thead className="bg-gray-800">
+      <table className="w-full text-left border border-gray-300 dark:border-gray-700">
+        <thead className="bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white">
           <tr>
             <th className="p-2">Model Name</th>
             <th className="p-2">Brand</th>
@@ -78,7 +78,7 @@ export default function ModelPage() {
         </thead>
         <tbody>
           {models.map((m) => (
-            <tr key={m.id} className="border-t border-gray-700">
+            <tr key={m.id} className="border-t border-gray-300 dark:border-gray-700">
               <td className="p-2">{m.name}</td>
               <td className="p-2">{m.brand}</td>
               <td className="p-2">{m.series}</td>
@@ -105,6 +105,7 @@ export default function ModelPage() {
             name="name"
             value={form.name}
             onChange={handleChange}
+            className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
           />
 
           {/* Brand Dropdown */}
@@ -121,7 +122,7 @@ export default function ModelPage() {
                     handleChange(e);
                   }
                 }}
-                className="w-full p-2 rounded bg-gray-700 border border-gray-600"
+                className="w-full p-2 rounded bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
               >
                 <option value="">Select Brand</option>
                 {brands.map((b, i) => (
@@ -140,20 +141,20 @@ export default function ModelPage() {
                   type="text"
                   value={newBrand}
                   onChange={(e) => setNewBrand(e.target.value)}
-                  className="w-full p-2 rounded bg-gray-700 border border-gray-600"
+                  className="w-full p-2 rounded bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
                   placeholder="Enter brand name"
                 />
                 <button
                   type="button"
                   onClick={handleAddBrand}
-                  className="px-3 py-2 bg-green-600 rounded-lg"
+                  className="px-3 py-2 bg-green-600 dark:bg-green-500 text-white rounded-lg transition-colors duration-300"
                 >
                   Save
                 </button>
                 <button
                   type="button"
                   onClick={() => setAddingBrand(false)}
-                  className="px-3 py-2 bg-red-600 rounded-lg"
+                  className="px-3 py-2 bg-red-600 dark:bg-red-500 text-white rounded-lg transition-colors duration-300"
                 >
                   Cancel
                 </button>
@@ -166,6 +167,7 @@ export default function ModelPage() {
             name="series"
             value={form.series}
             onChange={handleChange}
+            className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
           />
         </FormModal>
       )}
