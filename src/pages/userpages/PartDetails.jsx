@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import Header from "../components/Header";
-import SearchBar from "../components/SearchBar";
+import Header from "../../components/Header";
+import SearchBar from "../../components/SearchBar";
 
 const modelData = {
   samsung: {
@@ -73,7 +73,7 @@ export default function PartDetails() {
         
                 <SearchBar></SearchBar>
                 </div>
-    <div className="p-6 min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="p-6">
         
       <h1 className=" pt-6 text-2xl font-bold dark:text-white mb-6">
         {data.name} {partType.charAt(0).toUpperCase() + partType.slice(1)} Parts
