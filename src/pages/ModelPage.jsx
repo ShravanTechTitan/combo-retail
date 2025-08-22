@@ -30,7 +30,7 @@ export default function ModelPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       {/* Header */}
       <Header />
-
+    <h1 className="text-black">this is rendom text for testing</h1>
       <main className="max-w-5xl mx-auto p-6 space-y-6">
         {/* SearchBar */}
         <div className="flex justify-center">
