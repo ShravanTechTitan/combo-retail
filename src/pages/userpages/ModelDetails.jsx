@@ -51,8 +51,10 @@ export default function ModelDetails() {
         </div>
   
     <div className="p-6 min-h-screen bg-gray-50 dark:bg-gray-900">
-      <h1 className="text-2xl font-bold border border-red-600 dark:text-white mb-6">
-        {brand.name} Spare Parts
+
+      
+
+      <h1 className="text-2xl border border-red-600 font-bold dark:text-white mb-6">
       </h1>
 
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
