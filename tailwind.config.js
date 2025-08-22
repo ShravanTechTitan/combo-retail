@@ -1,10 +1,11 @@
 module.exports = {
   darkMode: 'class', // follow system preference
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-    "./src/**/**/*.{js,jsx,ts,tsx}",
-    "./public/index.html",
-  ],
+  "./src/**/*.{js,jsx,ts,tsx}",
+  "./src/pages/**/*.{js,jsx,ts,tsx}", // optional redundancy
+  "./public/index.html",
+],
+
   theme: {
     extend: {},
   },
