@@ -51,14 +51,13 @@ const modelData = {
     },
   },
 };
-
 export default function PartDetails() {
   const { brand, partType } = useParams();
   const data = modelData[brand?.toLowerCase()];
 
   if (!data || !data.parts[partType]) {
     return (
-      <h2 className="p-6">
+      <h2 className="p-6 dark:text-white">
         No {partType} available for {brand}
       </h2>
     );
@@ -67,38 +66,39 @@ export default function PartDetails() {
   const parts = data.parts[partType];
 
   return (
-     <div className=" min-h-screen bg-gray-50 dark:bg-gray-900">
-        <Header></Header>
-         <div  className="flex justify-center pt-4">
-        
-                <SearchBar></SearchBar>
-                </div>
-    <div className="p-6">
-        
-      <h1 className=" pt-6 text-2xl font-bold dark:text-white mb-6">
-        {data.name} {partType.charAt(0).toUpperCase() + partType.slice(1)} Parts
-      </h1>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <Header />
 
-      <div className="grid sm:grid-cols-2 md:grid-cols-2 gap-6">
-        {parts.map((p) => (
-          <div
-            key={p.id}
-            className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow hover:shadow-lg transition"
-          >
-            <h3 className="text-lg font-semibold dark:text-white">{p.name}</h3>
-
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              <span className="font-semibold">Supported Models:</span>{" "}
-              {p.supportedModels.join(", ")}
-            </p>
-
-            <span className="block mt-2 font-bold text-blue-600 dark:text-blue-400">
-              {p.price}
-            </span>
-          </div>
-        ))}
+      <div className="flex justify-center pt-4">
+        <SearchBar />
       </div>
-    </div>
+
+      <div className="p-6">
+        <h1 className="pt-6 text-2xl font-bold dark:text-white mb-6">
+          {data.name}{" "}
+          {partType.charAt(0).toUpperCase() + partType.slice(1)} Parts
+        </h1>
+
+        <div className="grid sm:grid-cols-2 md:grid-cols-2 gap-6">
+          {parts.map((p) => (
+            <div
+              key={p.id}
+              className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow hover:shadow-lg transition"
+            >
+              <h3 className="text-lg font-semibold dark:text-white">{p.name}</h3>
+
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                <span className="font-semibold">Supported Models:</span>{" "}
+                {p.supportedModels.join(", ")}
+              </p>
+
+              <span className="block mt-2 font-bold text-blue-600 dark:text-blue-400">
+                {p.price}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

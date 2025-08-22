@@ -16,12 +16,10 @@ const modal = [
   { id: 8, name: "Redmi", type: "mobile" },
   { id: 9, name: "Realme", type: "mobile" },
 ];
-
 export default function Home() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
- 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Header */}
@@ -33,8 +31,7 @@ export default function Home() {
       </div>
 
       {/* Model Cards */}
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 bg-gray-50 dark:bg-gray-900">
-
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
         {modal.map((m) => (
           <div
             key={m.id}
