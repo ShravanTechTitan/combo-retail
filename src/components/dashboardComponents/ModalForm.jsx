@@ -28,7 +28,7 @@ export default function ModalForm({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm ">
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-xl font-bold mb-4">{title}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -58,7 +58,7 @@ export default function ModalForm({
             </button>
             <button
               type="submit"
-              className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
+              className="px-3 py-1 bg-blue-500  hover:bg-blue-600 text-white rounded-md"
             >
               Save
             </button>

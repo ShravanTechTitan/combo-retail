@@ -55,13 +55,15 @@ export default function ProductManager() {
   };
 
   return (
-    <div className="p-6 bg-gray-950 text-gray-100 min-h-screen">
+    <div className="p-6 bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 min-h-screen transition-colors">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-indigo-400">📦 Product Manager</h2>
+        <h2 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">
+          📦 Product Manager
+        </h2>
         <button
           onClick={() => setShowForm(true)}
-          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-white"
+          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 rounded-lg text-white transition-colors"
         >
           + Add Product
         </button>
@@ -71,7 +73,7 @@ export default function ProductManager() {
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-gray-800">
+            <tr className="bg-gray-200 dark:bg-gray-800">
               <th className="p-2 text-left text-sm">ID</th>
               <th className="p-2 text-left text-sm">Brand</th>
               <th className="p-2 text-left text-sm">Vendor</th>
@@ -88,7 +90,7 @@ export default function ProductManager() {
             {products.map((p) => (
               <tr
                 key={p.id}
-                className="border-b border-gray-700 hover:bg-gray-800"
+                className="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
                 <td className="p-2 text-sm">{p.id}</td>
                 <td className="p-2 text-sm">{p.brand}</td>
@@ -102,13 +104,13 @@ export default function ProductManager() {
                 <td className="p-2 flex gap-2 justify-center">
                   <button
                     onClick={() => handleEdit(p.id)}
-                    className="px-2 py-1 bg-yellow-500 hover:bg-yellow-600 text-white text-xs rounded"
+                    className="px-2 py-1 bg-yellow-500 hover:bg-yellow-600 text-white text-xs rounded transition-colors"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(p.id)}
-                    className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded"
+                    className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded transition-colors"
                   >
                     Delete
                   </button>
@@ -119,7 +121,7 @@ export default function ProductManager() {
               <tr>
                 <td
                   colSpan={10}
-                  className="text-center p-4 text-gray-400 italic"
+                  className="text-center p-4 text-gray-500 dark:text-gray-400 italic"
                 >
                   No products added yet.
                 </td>
@@ -132,8 +134,8 @@ export default function ProductManager() {
       {/* Modal Form with Scroll */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-          <div className="bg-gray-900 rounded-xl shadow-xl w-[90%] max-w-5xl max-h-[90vh] overflow-y-auto p-8">
-            <h3 className="text-xl font-semibold mb-6 text-indigo-400">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl w-[90%] max-w-5xl max-h-[90vh] overflow-y-auto p-8 transition-colors">
+            <h3 className="text-xl font-semibold mb-6 text-indigo-600 dark:text-indigo-400">
               {editing ? "✏️ Edit Product" : "➕ Add Product"}
             </h3>
 
@@ -146,7 +148,7 @@ export default function ProductManager() {
                     name="brand"
                     value={form.brand}
                     onChange={handleChange}
-                    className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700"
+                    className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
                   >
                     <option value="">Select Brand</option>
                     {brands.map((b, i) => (
@@ -162,7 +164,7 @@ export default function ProductManager() {
                     name="vendor"
                     value={form.vendor}
                     onChange={handleChange}
-                    className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700"
+                    className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
                   >
                     <option value="">Select Vendor</option>
                     {vendors.map((v, i) => (
@@ -182,7 +184,7 @@ export default function ProductManager() {
                     name="category"
                     value={form.category}
                     onChange={handleChange}
-                    className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700"
+                    className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
                   >
                     <option value="">Select Category</option>
                     {categories.map((c, i) => (
@@ -198,7 +200,7 @@ export default function ProductManager() {
                     name="model"
                     value={form.model}
                     onChange={handleChange}
-                    className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700"
+                    className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
                   >
                     <option value="">Select Model</option>
                     {models.map((m, i) => (
@@ -219,7 +221,7 @@ export default function ProductManager() {
                     name="id"
                     value={form.id}
                     onChange={handleChange}
-                    className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700"
+                    className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
                     placeholder="e.g. B345"
                   />
                 </div>
@@ -230,7 +232,7 @@ export default function ProductManager() {
                     name="name"
                     value={form.name}
                     onChange={handleChange}
-                    className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700"
+                    className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
                     placeholder="Samsung Battery B345"
                   />
                 </div>
@@ -245,7 +247,7 @@ export default function ProductManager() {
                     name="price"
                     value={form.price}
                     onChange={handleChange}
-                    className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700"
+                    className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
                     placeholder="Enter Price"
                   />
                 </div>
@@ -256,7 +258,7 @@ export default function ProductManager() {
                     name="stock"
                     value={form.stock}
                     onChange={handleChange}
-                    className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700"
+                    className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
                     placeholder="Enter Stock Count"
                   />
                 </div>
@@ -270,7 +272,7 @@ export default function ProductManager() {
                   value={form.description}
                   onChange={handleChange}
                   rows="3"
-                  className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700"
+                  className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
                   placeholder="Enter product details..."
                 />
               </div>
@@ -283,23 +285,23 @@ export default function ProductManager() {
                   name="warranty"
                   value={form.warranty}
                   onChange={handleChange}
-                  className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700"
+                  className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
                   placeholder="e.g. 6 Months"
                 />
               </div>
 
               {/* Buttons */}
-              <div className="flex justify-end gap-4 sticky bottom-0 bg-gray-900 py-4">
+              <div className="flex justify-end gap-4 sticky bottom-0 bg-white dark:bg-gray-900 py-4">
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-lg text-white"
+                  className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white"
+                  className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
                 >
                   Save Product
                 </button>

@@ -43,7 +43,7 @@ export default function BrandPage() {
   };
 
   return (
-    <div className="p-6 w-[90%] mx-auto text-white">
+    <div className="p-6 w-[100%] mx-auto bg-white rounded dark-gray-900 text-black dark:text-white">
       <div className="flex justify-between mb-4">
         <h1 className="text-2xl font-bold">Brands</h1>
         <button
@@ -59,8 +59,8 @@ export default function BrandPage() {
       </div>
 
       {/* Table */}
-      <table className="w-full text-left border border-gray-700">
-        <thead className="bg-gray-800">
+      <table className="w-full text-left border border-rounded-lg border-gray-700">
+        <thead className="bg-gray-200 dark:bg-gray-800">
           <tr>
             <th className="p-2">Name</th>
             <th className="p-2">Country</th>
@@ -69,7 +69,7 @@ export default function BrandPage() {
         </thead>
         <tbody>
           {brands.map((b) => (
-            <tr key={b.id} className="border-t border-gray-700">
+            <tr key={b.id} className="border-t  border-gray-700">
               <td className="p-2">{b.name}</td>
               <td className="p-2">{b.country}</td>
               <td className="p-2">
