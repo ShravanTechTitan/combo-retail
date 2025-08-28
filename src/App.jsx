@@ -9,7 +9,7 @@ import Login from "./pages/Login.jsx";
 import { useEffect, useState } from "react";
 import {jwtDecode} from "jwt-decode";
 import ModelPage from "./pages/ModelPage.jsx";
-import DeviceCategories from "./pages/DashbordPages/deviceCategories.jsx";
+import DeviceCategories from "./pages/DashbordPages/DeviceCategories.jsx";
 import PartCategories from "./pages/DashbordPages/PartCategories.jsx";
 
 import Products from "./pages/DashbordPages/Products.jsx";
