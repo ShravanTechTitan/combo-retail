@@ -9,13 +9,15 @@ import Login from "./pages/Login.jsx";
 import { useEffect, useState } from "react";
 import {jwtDecode} from "jwt-decode";
 import ModelPage from "./pages/ModelPage.jsx";
-import Categories from "./pages/DashbordPages/Categories.jsx";
+import DeviceCategories from "./pages/DashbordPages/deviceCategories.jsx";
+import PartCategories from "./pages/DashbordPages/PartCategories.jsx";
 
 import Products from "./pages/DashbordPages/Products.jsx";
 import BrandPage from "./pages/DashbordPages/BrandPage.jsx";
 import Model from "./pages/DashbordPages/ModelPage.jsx";
 import ModelDetails from "./pages/userpages/ModelDetails.jsx";
 import PartDetails from "./pages/userpages/PartDetails.jsx";
+import ProductPage from "./pages/userpages/ProductPage.jsx";
 
 // App.jsx
 
@@ -44,7 +46,8 @@ function App() {
       <Route path="/" element={<Home />} />
          <Route path="/login" element={<Login />} />
       <Route path="/dashboard" element={<DashboardLayout />}>
-        <Route path="categories" element={<Categories/>}></Route>
+        <Route path="deviceCategories" element={<DeviceCategories/>}></Route>
+        <Route path="partCategories" element={<PartCategories/>}></Route>
         <Route path="BrandPage" element={<BrandPage></BrandPage>}/>
         <Route path="ModelPage" element={<Model></Model>}/>
         <Route path="Products" element={<Products></Products>}/>
@@ -54,8 +57,9 @@ function App() {
       </Route>
         <Route path="/combo/:id" element={<ComboPage />} /> {/* Level 2 */}
         <Route path="/combo/:id/:modelId" element={<ModelPage />} /> {/* Level 3 */}
-        <Route path="/models/:name" element={<ModelDetails />} />
-        <Route path="/models/:brand/:partType" element={<PartDetails />} />
+        <Route path="/models/:brand/:brandId" element={<ModelDetails />} />
+        <Route path="/models/:brand/:brandId/:partCategoryName/:partCategoryId" element={<PartDetails />} />
+         <Route path="/product/:id" element={<ProductPage />} />
     </Routes>
     </div>
   );

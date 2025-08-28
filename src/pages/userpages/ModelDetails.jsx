@@ -1,77 +1,98 @@
-import { useParams,useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
-import SearchBar from "../../components/SearchBar";
-export const modelData = {
-  samsung: {
-    name: "Samsung",
-    parts: {
-      battery: [
-        { id: 1, model: "S20", name: "Samsung S20 Battery", price: "₹1,299" },
-        { id: 2, model: "F14", name: "Samsung F14 Battery", price: "₹999" },
-        { id: 3, model: "F15", name: "Samsung F15 Battery", price: "₹1,199" },
-      ],
-      display: [
-        { id: 1, model: "S20", name: "Samsung S20 Basic Display", price: "₹2,999" },
-        { id: 2, model: "S20", name: "Samsung S20 Pro Display", price: "₹4,999" },
-        { id: 3, model: "F14", name: "Samsung F14 Display", price: "₹1,999" },
-      ],
-    
-    },
-  },
-  iphone: {
-    name: "iPhone",
-    parts: {
-      battery: [
-        { id: 1, model: "iPhone 12", name: "iPhone 12 Battery", price: "₹2,500" },
-      ],
-      display: [
-        { id: 2, model: "iPhone 13", name: "iPhone 13 OLED Display", price: "₹5,500" },
-      ],
-    },
-  },
-};
-
-
+import FilterSearchBar from "../../components/FilterSearchBar";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function ModelDetails() {
-  const { name } = useParams();
+  const [products, setProducts] = useState([]);
+  const [partCategories, setPartCategories] = useState([]);
+  const [search, setSearch] = useState("");
+
+  const { brand, brandId } = useParams();
   const navigate = useNavigate();
-  const brand = modelData[name.toLowerCase()];
 
-  if (!brand) return <h2>Brand not found</h2>;
+  // Fetch products for the brand
+  const fetchProducts = async () => {
+    try {
+      const res = await axios.get(`/api/products/${brand}/${brandId}`);
+      setProducts(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-  const partCategories = Object.keys(brand.parts);
+  useEffect(() => {
+    fetchProducts();
+  }, [brand, brandId]);
+
+  // Extract unique categories from products
+  useEffect(() => {
+    if (products.length > 0) {
+      const uniqueCategories = [
+        ...new Map(
+          products.map((p) => [p.partCategoryId._id, p.partCategoryId])
+        ).values(),
+      ];
+      setPartCategories(uniqueCategories);
+    }
+  }, [products]);
+
+  // Filter categories based on search
+  const filteredCategories = partCategories.filter((c) =>
+    c.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className=" min-h-screen bg-gray-50 dark:bg-gray-900">
-        <Header></Header>
-        <div  className="flex justify-center pt-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <Header />
 
-        <SearchBar></SearchBar>
-        </div>
-  
-    <div className="p-6 min-h-screen bg-gray-50 dark:bg-gray-900">
-      <h1 className="text-2xl  font-bold dark:text-white mb-6">
-        {brand.name} Spare Parts
-      </h1>
+      {/* Search Bar */}
+      <div className="flex justify-center pt-6">
+        <FilterSearchBar
+          items={partCategories}
+          search={search}
+          setSearch={setSearch}
+          placeholder={`🔍 Search categories...`}
+          filterKey="name"
+        />
 
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {partCategories.map((partType) => (
-          <div
-            key={partType}
-            onClick={() => navigate(`/models/${name}/${partType}`)}
-            className="cursor-pointer bg-white dark:bg-gray-800 p-6 rounded-xl shadow hover:shadow-lg transition"
-          >
-            <h3 className="text-lg font-semibold dark:text-white capitalize">
-              {partType}
-            </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              View all {partType} parts
+      </div>
+
+      {/* Page Title */}
+      <div className="p-6">
+        <h1 className="text-3xl font-bold dark:text-white mb-6 capitalize">
+          {brand} Spare Parts
+        </h1>
+
+        {/* Categories Grid */}
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredCategories.map((category) => (
+            <div
+              key={category._id}
+              onClick={() =>
+                navigate(
+                  `/models/${brand}/${brandId}/${category.name}/${category._id}`
+                )
+              }
+              className="cursor-pointer bg-white dark:bg-gray-800 p-6 rounded-xl shadow hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200"
+            >
+              <h3 className="text-lg font-semibold dark:text-white capitalize mb-2">
+                {category.name}
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                View all {category.name} parts
+              </p>
+            </div>
+          ))}
+
+          {filteredCategories.length === 0 && (
+            <p className="col-span-full text-gray-500 dark:text-gray-400 text-center mt-4">
+              No categories match your search.
             </p>
-          </div>
-        ))}
+          )}
+        </div>
       </div>
     </div>
-      </div>
   );
 }

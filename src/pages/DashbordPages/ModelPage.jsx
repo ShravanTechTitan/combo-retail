@@ -1,54 +1,97 @@
 // pages/ModelPage.jsx
-import React, { useState } from "react";
+import React, { useState,useRef,useEffect} from "react";
 import InputField from "../../components/dashboardComponents/InputField";
 import FormModal from "../../components/dashboardComponents/FormModal";
 import ActionButtons from "../../components/dashboardComponents/ActionButtons";
+import axios from "axios";
 
 export default function ModelPage() {
   const [models, setModels] = useState([]);
-  const [brands, setBrands] = useState(["Samsung", "Apple", "Realme"]); // default brands
+  const [brands, setBrands] = useState([]);
   const [form, setForm] = useState({ name: "", brand: "", series: "" });
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [addingBrand, setAddingBrand] = useState(false);
   const [newBrand, setNewBrand] = useState("");
 
+ const brandRef = useRef();
+
+   
+  const fetchBrands = async () => {
+    try {
+      const res = await axios.get("/api/brands");
+      setBrands(res.data)
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+    }
+  };
+ 
+   
+  const fetchModels = async () => {
+    try {
+      const res = await axios.get("/api/models");
+      setModels(res.data)
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+    }
+  };
+ useEffect(()=>{
+  fetchModels()
+  fetchBrands()
+  
+ },[])
+
+
+
+
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleDelete = (id) => {
-    setModels(models.filter((m) => m.id !== id));
+
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+    const payload = {
+      name:form.name,
+      series:form.series,
+      brandId:form.brand
+    }
+    
+    try{
+      if (editingId) {
+        console.log(editingId)
+        await axios.put(`/api/models/${editingId}`,payload);
+      } else {
+        await axios.post("/api/models", payload);
+      }
+      setForm({ name: "", brand: "", series: "" });
+      setShowForm(false);
+      fetchModels()
+  
+
+    }catch(error){
+      console.error("Error saving models:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`/api/models/${id}`);
+      fetchModels()
+    } catch (error) {
+      console.error("Error deleting brand:", error);
+    }
   };
 
   const handleEdit = (model) => {
-    setForm({ name: model.name, brand: model.brand, series: model.series });
-    setEditingId(model.id);
+    setForm({ name: model.name,brand: model.brandId?._id || model.brandId, series: model.series });
+    setEditingId(model._id);
     setShowForm(true);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (editingId) {
-      setModels(models.map((m) => (m.id === editingId ? { ...m, ...form } : m)));
-      setEditingId(null);
-    } else {
-      setModels([...models, { id: Date.now(), ...form }]);
-    }
-    setForm({ name: "", brand: "", series: "" });
-    setShowForm(false);
-    setAddingBrand(false);
-    setNewBrand("");
-  };
 
-  const handleAddBrand = () => {
-    if (newBrand.trim()) {
-      setBrands([...brands, newBrand.trim()]);
-      setForm({ ...form, brand: newBrand.trim() });
-      setNewBrand("");
-      setAddingBrand(false);
-    }
-  };
+
 
   return (
     <div className="p-6 w-[90%] mx-auto min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
@@ -80,12 +123,12 @@ export default function ModelPage() {
           {models.map((m) => (
             <tr key={m.id} className="border-t border-gray-300 dark:border-gray-700">
               <td className="p-2">{m.name}</td>
-              <td className="p-2">{m.brand}</td>
+              <td className="p-2">{m.brandId.name}</td>
               <td className="p-2">{m.series}</td>
               <td className="p-2">
                 <ActionButtons
                   onEdit={() => handleEdit(m)}
-                  onDelete={() => handleDelete(m.id)}
+                  onDelete={() => handleDelete(m._id)}
                 />
               </td>
             </tr>
@@ -126,12 +169,20 @@ export default function ModelPage() {
               >
                 <option value="">Select Brand</option>
                 {brands.map((b, i) => (
-                  <option key={i} value={b}>
-                    {b}
+                  <option key={i} value={b._id}>
+                    {b.name}
                   </option>
                 ))}
-                <option value="__add__">➕ Add New Brand</option>
+               
               </select>
+              <InputField
+                label="Series"
+                name="series"
+                value={form.series}
+                onChange={handleChange}
+                className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
+              />
+           
             </div>
           ) : (
             <div className="mb-4">
@@ -161,15 +212,7 @@ export default function ModelPage() {
               </div>
             </div>
           )}
-
-          <InputField
-            label="Series"
-            name="series"
-            value={form.series}
-            onChange={handleChange}
-            className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
-          />
-        </FormModal>
+         </FormModal>
       )}
     </div>
   );

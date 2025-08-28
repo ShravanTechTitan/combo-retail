@@ -1,29 +1,53 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { FaPlus } from "react-icons/fa";
 import InputField from "../../components/dashboardComponents/InputField";
 import ActionButtons from "../../components/dashboardComponents/ActionButtons";
+import ConfirmDialog from "../../components/dashboardComponents/ConfirmDialog";
 
-export default function CategoryPage() {
-  const [categories, setCategories] = useState([]);
+
+export default function DeviceCategoryPage() {
+  const [deviceCategories, setdeviceCategories] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-  });
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [formData, setFormData] = useState({ name: "", description: "" });
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  // Load categories on mount
+  useEffect(() => {
+    fetchdeviceCategories();
+  }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (editing) {
-      setCategories(categories.map((c) => (c.id === editing.id ? { ...editing, ...formData } : c)));
-    } else {
-      setCategories([...categories, { id: Date.now(), ...formData }]);
+  const fetchdeviceCategories = async () => {
+    try {
+      const res = await axios.get("/api/deviceCategories"); 
+      setdeviceCategories(res.data);
+    } catch (err) {
+      console.error("Error fetching deviceCategories:", err);
     }
-    setFormData({ name: "", description: "" });
-    setEditing(null);
-    setShowForm(false);
+  };
+
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (editing) {
+        // Update category
+        await axios.put(`/api/deviceCategories/${editing._id}`, formData);
+      } else {
+        // Create new category
+        await axios.post("/api/deviceCategories", formData);
+      }
+      fetchdeviceCategories(); // refresh list
+      setFormData({ name: "", description: "" });
+      setEditing(null);
+      setShowForm(false);
+    } catch (err) {
+      console.error("Error saving category:", err);
+    }
   };
 
   const handleEdit = (cat) => {
@@ -32,13 +56,22 @@ export default function CategoryPage() {
     setShowForm(true);
   };
 
-  const handleDelete = (id) => setCategories(categories.filter((c) => c.id !== id));
+  const confirmDelete = async (id) => {
+    try {
+      await axios.delete(`/api/deviceCategories/${deleteId}`);
+      fetchdeviceCategories();
+      setConfirmOpen(false);
+      setDeleteId(null);
+    } catch (err) {
+      console.error("Error deleting device category:", err);
+    }
+  };
 
   return (
     <div className="p-4 text-gray-800 dark:text-gray-200">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-base font-semibold">Manage Categories</h2>
+        <h2 className="text-base font-semibold">Manage Device Categories</h2>
         <button
           onClick={() => {
             setEditing(null);
@@ -62,15 +95,20 @@ export default function CategoryPage() {
             </tr>
           </thead>
           <tbody>
-            {categories.map((c) => (
+            {deviceCategories.map((c) => (
               <tr
-                key={c.id}
+                key={c._id}
                 className="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
               >
                 <td className="px-3 py-2">{c.name}</td>
                 <td className="px-3 py-2">{c.description}</td>
                 <td className="px-3 py-2 text-center">
-                  <ActionButtons onEdit={() => handleEdit(c)} onDelete={() => handleDelete(c.id)} />
+                  <ActionButtons
+                    onEdit={() => handleEdit(c)}
+                    onDelete={() =>  {
+                    setDeleteId(c._id);
+                     setConfirmOpen(true);}}
+                  />
                 </td>
               </tr>
             ))}
@@ -83,7 +121,7 @@ export default function CategoryPage() {
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex justify-center items-center z-50 p-4">
           <div className="bg-gray-900 text-white p-6 rounded-2xl shadow-2xl w-full max-w-lg">
             <h3 className="text-lg font-bold mb-5 border-b border-gray-700 pb-2">
-              {editing ? "Edit Category" : "Add New Category"}
+              {editing ? "Edit Device Category" : "Add New Device Category"}
             </h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <InputField
@@ -119,6 +157,15 @@ export default function CategoryPage() {
           </div>
         </div>
       )}
+
+      <ConfirmDialog 
+        isOpen={confirmOpen} 
+        title="Delete Category"
+        message="This action cannot be undone. Are you sure you want to delete this category?"
+        onCancel={() => setConfirmOpen(false)}
+        onConfirm={confirmDelete}
+      />
+      
     </div>
   );
 }
