@@ -15,16 +15,15 @@ export default function Home() {
   const navigate = useNavigate();
   
   const fetchBrands = async () => {
-  try {
-    const res = await axios.get(
-      "https://combo-retailsbakcend-production.up.railway.app/api/brands"
-    );
-    setBrands(res.data);
-  } catch (error) {
-    console.error("Error fetching brands:", error);
-  }
-};
-
+    try {
+      const res = await axios.get("/brands");
+    
+      setBrands(res.data)
+      
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+    }
+  };
   console.log(brands)
 
   useEffect(()=>{
