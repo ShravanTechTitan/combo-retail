@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "combo-retailsbakcend-production.up.railway.app/",
+        target: "https://combo-retailsbakcend-production.up.railway.app",
         changeOrigin: true,
         secure: false,
       },
