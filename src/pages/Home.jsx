@@ -3,6 +3,7 @@ import ComboCard from "../components/ComboCard";
 import SearchBar from "../components/SearchBar";
 import Header from "../components/Header";
 import axios from "axios"
+import api from "../api"; 
 
 import { useNavigate } from "react-router-dom";
 
@@ -14,15 +15,14 @@ export default function Home() {
   const navigate = useNavigate();
   
   const fetchBrands = async () => {
-    try {
-      const res = await axios.get("/api/brands");
-    
-      setBrands(res.data)
-      
-    } catch (error) {
-      console.error("Error fetching brands:", error);
-    }
-  };
+  try {
+    const res = await api.get("/brands"); // no need to include /api here
+    setBrands(res.data);
+  } catch (error) {
+    console.error("Error fetching brands:", error);
+  }
+};
+
   console.log(brands)
 
   useEffect(()=>{
