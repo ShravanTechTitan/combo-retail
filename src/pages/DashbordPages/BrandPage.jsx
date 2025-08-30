@@ -3,8 +3,7 @@ import React, { useState, useEffect } from "react";
 import InputField from "../../components/dashboardComponents/InputField";
 import FormModal from "../../components/dashboardComponents/FormModal";
 import ActionButtons from "../../components/dashboardComponents/ActionButtons";
-import axios from "axios";
-
+import api from "../../api/axiosConfig";
 export default function BrandPage() {
   const [brands, setBrands] = useState([]);
   const [formdata, setFormdata] = useState({ name: "", country: "", category: "" });
@@ -18,7 +17,7 @@ const [deviceCategories,setdeviceCategories] =useState([])
   }, []);
 
 const fetchDeviceCategories =async()=>{
-  const res = await axios.get("/api/deviceCategories"); 
+  const res = await api.get("/deviceCategories"); 
   console.log(`res Data:`,res.data)
   setdeviceCategories(res.data)
   console.log(setdeviceCategories)
@@ -26,7 +25,7 @@ const fetchDeviceCategories =async()=>{
   
   const fetchBrands = async () => {
     try {
-      const res = await axios.get("/api/brands");
+      const res = await api.get("/brands");
       setBrands(res.data);
       console.log(res.data) 
     } catch (error) {
@@ -51,10 +50,10 @@ const fetchDeviceCategories =async()=>{
     try {
       if (editing) {
 
-        await axios.put(`/api/brands/${editing._id}`, payload);
+        await api.put(`/brands/${editing._id}`, payload);
       } else {
      
-        await axios.post("/api/brands", payload);
+        await api.post("/brands", payload);
       }
       setFormdata({ name: "", country: "" });
       setEditing(null);
@@ -74,7 +73,7 @@ const fetchDeviceCategories =async()=>{
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/brands/${id}`);
+      await api.delete(`/brands/${id}`);
       setBrands(brands.filter((b) => b._id !== id));
     } catch (error) {
       console.error("Error deleting brand:", error);

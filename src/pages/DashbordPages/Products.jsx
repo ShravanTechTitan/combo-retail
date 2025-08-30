@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import MultiSelect from "../../components/dashboardComponents/MultiSelect";
+import api from "../../api/axiosConfig";
 
 export default function ProductManager() {
   const [products, setProducts] = useState([]);
@@ -26,47 +27,54 @@ export default function ProductManager() {
   const [form, setForm] = useState(initialForm);
   const [brands, setBrands] = useState([]);
   const [models, setModels] = useState([]);
-  const[partCategory,setPartCategory]= useState([])
-  const [openBrandDropdown, setOpenBrandDropdown] = useState(false);
-  const [openModelDropdown, setOpenModelDropdown] = useState(false);
+  const [partCategory, setPartCategory] = useState([]);
+  
+  // ✅ Loading states
+  const [loadingData, setLoadingData] = useState(false); // for fetches
+  const [submitting, setSubmitting] = useState(false); // for form submit
+  const [deletingId, setDeletingId] = useState(null); // for delete spinner
 
-  
-  
   const fetchBrands = async () => {
     try {
-      const res = await axios.get("/brands");
-      setBrands(res.data)
-      
+      const res = await api.get("/brands");
+      setBrands(res.data);
     } catch (error) {
       console.error("Error fetching brands:", error);
     }
   };
   const fetchModels = async () => {
     try {
-      const res = await axios.get("/models");
-      setModels(res.data)
+      const res = await api.get("/models");
+      setModels(res.data);
     } catch (error) {
-      console.error("Error fetching modelss:", error);
+      console.error("Error fetching models:", error);
     }
   };
-  const fetchPartCategories =async()=>{
-  const res = await axios.get("/partCategories"); 
-  
-  setPartCategory(res.data)
-
-}
-  const fetchProducts =async()=>{
-  const res = await axios.get("/products"); 
-
-  setProducts(res.data)
+  const fetchPartCategories = async () => {
+    try {
+      const res = await api.get("/partCategories");
+      setPartCategory(res.data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
     }
- useEffect(()=>{
-  fetchBrands()
-  fetchModels()
-  fetchPartCategories()
-  fetchProducts()
-  
- },[])
+  };
+  const fetchProducts = async () => {
+    try {
+      const res = await api.get("/products");
+      setProducts(res.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchAll = async () => {
+      setLoadingData(true);
+      await Promise.all([fetchBrands(), fetchModels(), fetchPartCategories(), fetchProducts()]);
+      setLoadingData(false);
+    };
+    fetchAll();
+  }, []);
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -82,70 +90,54 @@ export default function ProductManager() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
+
     const payloads = {
-      name:form.name,
-      partCategoryId:form.category || "",
-      modelIds:form.model.map((m)=>m.value) || [],
-      brandIds:form.brand.map((b)=>b.value)  || [],
-      price:Number(form.price),
-      description:form.description,
-      
+      name: form.name,
+      partCategoryId: form.category || "",
+      modelIds: form.model.map((m) => m.value) || [],
+      brandIds: form.brand.map((b) => b.value) || [],
+      price: Number(form.price),
+      description: form.description,
+    };
+
+    try {
+      if (editingId) {
+        await api.put(`/products/${editingId}`, payloads);
+      } else {
+        await api.post("/products", payloads);
+      }
+      setForm(initialForm);
+      setEditingId(null);
+      setShowForm(false);
+      await fetchProducts();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSubmitting(false);
     }
-    console.log(payloads)
-    if (editingId) {
-     await axios.put(`/api/products/${editingId}`,payloads)
-      
-    } else {
-      await axios.post("/api/products",payloads)
-    }
-    setForm(initialForm);
-    setEditingId(null);
-    setShowForm(false);
-    fetchProducts()
   };
-
- const handleEdit = (id) => {
-  const product = products.find((p) => p._id === id);
-
-  setForm({
-    id: product._id || "",
-    brand: product.brandIds.map(b => ({ label: b.name, value: b._id })),
-    category: product.partCategoryId?._id || "",
-    model: product.modelIds.map(m => ({ label: m.name, value: m._id })),
-    name: product.name || "",
-    price: product.price || "",
-    stock: product.stock || "",
-    description: product.description || "",
-    warranty: product.warranty || "",
-  });
-
-  setEditingId(product._id);
-  setShowForm(true);
-};
-
 
   const handleDelete = async (id) => {
+    setDeletingId(id);
     try {
-      await axios.delete(`/api/products/${id}`);
+      await api.delete(`/products/${id}`);
       setProducts(products.filter((p) => p._id !== id));
-    } catch (error) {
-      console.error("Error deleting Products:", error);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDeletingId(null);
     }
   };
+
   return (
     <div className="p-6 bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 min-h-screen transition-colors">
-      {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">
-          📦 Product Manager
-        </h2>
+        <h2 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">📦 Product Manager</h2>
         <button
           onClick={() => setShowForm(true)}
           className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 rounded-lg text-white transition-colors"
@@ -154,70 +146,71 @@ export default function ProductManager() {
         </button>
       </div>
 
-      {/* Product Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-gray-200 dark:bg-gray-800">
-              <th className="p-2 text-left text-sm">ID</th>
-              <th className="p-2 text-left text-sm">Name</th>
-              <th className="p-2 text-left text-sm">Brand</th>
-              {/* <th className="p-2 text-left text-sm">Vendor</th> */}
-              <th className="p-2 text-left text-sm">Category</th>
-              <th className="p-2 text-left text-sm">Model</th>
-              <th className="p-2 text-left text-sm">Price</th>
-              {/* <th className="p-2 text-left text-sm">Stock</th>
-              <th className="p-2 text-left text-sm">Warranty</th> */}
-              <th className="p-2 text-sm text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={10}
-                  className="text-center p-4 text-gray-500 dark:text-gray-400 italic"
-                >
-                  No products added yet.
-                </td>
+      {loadingData ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-gray-200 dark:bg-gray-800">
+                <th className="p-2 text-left text-sm">ID</th>
+                <th className="p-2 text-left text-sm">Name</th>
+                <th className="p-2 text-left text-sm">Brand</th>
+                <th className="p-2 text-left text-sm">Category</th>
+                <th className="p-2 text-left text-sm">Model</th>
+                <th className="p-2 text-left text-sm">Price</th>
+                <th className="p-2 text-sm text-center">Actions</th>
               </tr>
-            ) : (
-              products.map((p) => (
-                <tr
-                  key={p._id}
-                  className="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                >
-                  <td className="p-2 text-sm">{p._id}</td>
-                  <td className="p-2 text-sm">{p.name}</td>
-                  <td className="p-2 text-sm">{p.brandIds.map((b)=>b.name).join(', ')}</td>
-                  {/* <td className="p-2 text-sm">{p.vendor}</td> */}
-                  <td className="p-2 text-sm">{p.partCategoryId.name}</td>
-                  <td className="p-2 text-sm">{p.modelIds.map((m)=>m.name).join(", ")}</td>
-                  <td className="p-2 text-sm">₹{p.price}</td>
-                  {/* <td className="p-2 text-sm">{p.stock}</td>
-                  <td className="p-2 text-sm">{p.warranty}</td> */}
-                  <td className="p-2 flex gap-2 justify-center">
-                    <button
-                      onClick={() => handleEdit(p._id)}
-                      className="px-2 py-1 bg-yellow-500 hover:bg-yellow-600 text-white text-xs rounded transition-colors"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(p._id)}
-                      className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded transition-colors"
-                    >
-                      Delete
-                    </button>
+            </thead>
+            <tbody>
+              {products.length === 0 ? (
+                <tr>
+                  <td colSpan={10} className="text-center p-4 text-gray-500 dark:text-gray-400 italic">
+                    No products added yet.
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+              ) : (
+                products.map((p) => (
+                  <tr
+                    key={p._id}
+                    className="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  >
+                    <td className="p-2 text-sm">{p._id}</td>
+                    <td className="p-2 text-sm">{p.name}</td>
+                    <td className="p-2 text-sm">{p.brandIds.map((b) => b.name).join(", ")}</td>
+                    <td className="p-2 text-sm">{p.partCategoryId.name}</td>
+                    <td className="p-2 text-sm">{p.modelIds.map((m) => m.name).join(", ")}</td>
+                    <td className="p-2 text-sm">₹{p.price}</td>
+                    <td className="p-2 flex gap-2 justify-center">
+                      <button
+                        onClick={() => handleEdit(p._id)}
+                        className="px-2 py-1 bg-yellow-500 hover:bg-yellow-600 text-white text-xs rounded transition-colors"
+                        disabled={deletingId === p._id}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(p._id)}
+                        className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded transition-colors flex items-center justify-center"
+                        disabled={deletingId === p._id}
+                      >
+                        {deletingId === p._id ? (
+                          <div className="w-4 h-4 border-2 border-white border-dashed rounded-full animate-spin"></div>
+                        ) : (
+                          "Delete"
+                        )}
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-      {/* Modal Form */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
           <div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl w-[90%] max-w-5xl max-h-[90vh] overflow-y-auto p-8 transition-colors">
@@ -226,53 +219,52 @@ export default function ProductManager() {
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Brand Multi-Select */}
-               <div className="flex gap-4">
-  <input
-    type="text"
-    name="name"
-    value={form.name}
-    onChange={handleChange}
-    placeholder="Product Name"
-    className="w-1/2 p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
-  />
-  <select
-    name="category"
-    value={form.category}
-    onChange={handleChange}
-    className="w-1/2 p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
-  >
-    <option value="">Select Category</option>
-    {partCategory.map((c) => (
-      <option key={c._id} value={c._id}>
-        {c.name}
-      </option>
-    ))}
-  </select>
-</div>
-
-
-        <div ref={brandRef} className="relative">
-                <MultiSelect
-                label="Brand"
-                options={brands.map(b => ({ label: b.name, value: b._id }))}
-                selected={form.brand}
-                onChange={(val) => setForm((prev) => ({ ...prev, brand: val }))}
-                placeholder="Select Brand"
-              />
-             </div>
-     
-              <div ref={modelRef} className="relative">
-               
-                <MultiSelect
-                label="Model"
-                options={models.map(m => ({ label: m.name, value: m._id }))}
-                selected={form.model}
-                onChange={(val) => setForm((prev) => ({ ...prev, model: val }))}
-                placeholder="Select Model"
-              />                    
+              <div className="flex gap-4">
+                <input
+                  type="text"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="Product Name"
+                  className="w-1/2 p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
+                  required
+                />
+                <select
+                  name="category"
+                  value={form.category}
+                  onChange={handleChange}
+                  className="w-1/2 p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
+                  required
+                >
+                  <option value="">Select Category</option>
+                  {partCategory.map((c) => (
+                    <option key={c._id} value={c._id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
               </div>
-      
+
+              <div ref={brandRef} className="relative">
+                <MultiSelect
+                  label="Brand"
+                  options={brands.map((b) => ({ label: b.name, value: b._id }))}
+                  selected={form.brand}
+                  onChange={(val) => setForm((prev) => ({ ...prev, brand: val }))}
+                  placeholder="Select Brand"
+                />
+              </div>
+
+              <div ref={modelRef} className="relative">
+                <MultiSelect
+                  label="Model"
+                  options={models.map((m) => ({ label: m.name, value: m._id }))}
+                  selected={form.model}
+                  onChange={(val) => setForm((prev) => ({ ...prev, model: val }))}
+                  placeholder="Select Model"
+                />
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <input
                   type="text"
@@ -290,22 +282,6 @@ export default function ProductManager() {
                   placeholder="Price"
                   className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
                 />
-                <input
-                  type="number"
-                  name="stock"
-                  value={form.stock}
-                  onChange={handleChange}
-                  placeholder="Stock"
-                  className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
-                />
-                <input
-                  type="text"
-                  name="warranty"
-                  value={form.warranty}
-                  onChange={handleChange}
-                  placeholder="Warranty"
-                  className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
-                />
               </div>
 
               <div>
@@ -320,19 +296,21 @@ export default function ProductManager() {
                 />
               </div>
 
-              {/* Buttons */}
               <div className="flex justify-end gap-4 sticky bottom-0 bg-white dark:bg-gray-900 py-4">
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
                   className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors"
+                  disabled={submitting}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                  className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2"
+                  disabled={submitting}
                 >
+                  {submitting && <div className="w-4 h-4 border-2 border-white border-dashed rounded-full animate-spin"></div>}
                   Save Product
                 </button>
               </div>

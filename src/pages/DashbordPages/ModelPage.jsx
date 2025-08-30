@@ -4,6 +4,7 @@ import InputField from "../../components/dashboardComponents/InputField";
 import FormModal from "../../components/dashboardComponents/FormModal";
 import ActionButtons from "../../components/dashboardComponents/ActionButtons";
 import axios from "axios";
+import api from "../../api/axiosConfig";
 
 export default function ModelPage() {
   const [models, setModels] = useState([]);
@@ -19,7 +20,7 @@ export default function ModelPage() {
    
   const fetchBrands = async () => {
     try {
-      const res = await axios.get("/api/brands");
+      const res = await api.get("/brands");
       setBrands(res.data)
     } catch (error) {
       console.error("Error fetching brands:", error);
@@ -29,7 +30,7 @@ export default function ModelPage() {
    
   const fetchModels = async () => {
     try {
-      const res = await axios.get("/api/models");
+      const res = await api.get("/models");
       setModels(res.data)
     } catch (error) {
       console.error("Error fetching brands:", error);
@@ -61,9 +62,9 @@ export default function ModelPage() {
     try{
       if (editingId) {
         console.log(editingId)
-        await axios.put(`/models/${editingId}`,payload);
+        await api.put(`/models/${editingId}`,payload);
       } else {
-        await axios.post("/models", payload);
+        await api.post("/models", payload);
       }
       setForm({ name: "", brand: "", series: "" });
       setShowForm(false);
@@ -77,7 +78,7 @@ export default function ModelPage() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/models/${id}`);
+      await api.delete(`/models/${id}`);
       fetchModels()
     } catch (error) {
       console.error("Error deleting brand:", error);

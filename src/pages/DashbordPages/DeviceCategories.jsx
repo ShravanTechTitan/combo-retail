@@ -4,6 +4,7 @@ import { FaPlus } from "react-icons/fa";
 import InputField from "../../components/dashboardComponents/InputField";
 import ActionButtons from "../../components/dashboardComponents/ActionButtons";
 import ConfirmDialog from "../../components/dashboardComponents/ConfirmDialog";
+import api from "../../api/axiosConfig";
 
 
 export default function DeviceCategoryPage() {
@@ -21,7 +22,7 @@ export default function DeviceCategoryPage() {
 
   const fetchdeviceCategories = async () => {
     try {
-      const res = await axios.get("/api/deviceCategories"); 
+      const res = await api.get("/deviceCategories"); 
       setdeviceCategories(res.data);
     } catch (err) {
       console.error("Error fetching deviceCategories:", err);
@@ -36,10 +37,10 @@ export default function DeviceCategoryPage() {
     try {
       if (editing) {
         // Update category
-        await axios.put(`/api/deviceCategories/${editing._id}`, formData);
+        await api.put(`/deviceCategories/${editing._id}`, formData);
       } else {
         // Create new category
-        await axios.post("/api/deviceCategories", formData);
+        await api.post("/deviceCategories", formData);
       }
       fetchdeviceCategories(); // refresh list
       setFormData({ name: "", description: "" });
@@ -58,7 +59,7 @@ export default function DeviceCategoryPage() {
 
   const confirmDelete = async (id) => {
     try {
-      await axios.delete(`/api/deviceCategories/${deleteId}`);
+      await api.delete(`/deviceCategories/${deleteId}`);
       fetchdeviceCategories();
       setConfirmOpen(false);
       setDeleteId(null);
