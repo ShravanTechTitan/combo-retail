@@ -2,7 +2,6 @@ import { Routes, Route, Router } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import DashboardLayout from "./pages/DashbordPages/DashboardLayout.jsx";
 import Combos from "./pages/DashbordPages/Combos.jsx";
-import ComboPage from "./pages/ComboPage.jsx";
 import Mobiles from "./pages/Mobiles.jsx";
 import Subscriptions from "./pages/Subscriptions.jsx";
 import Login from "./pages/Login.jsx";
@@ -55,7 +54,6 @@ function App() {
         <Route path="mobiles" element={<Mobiles />} />
         <Route path="subscriptions" element={<Subscriptions />} />
       </Route>
-        <Route path="/combo/:id" element={<ComboPage />} /> {/* Level 2 */}
         <Route path="/combo/:id/:modelId" element={<ModelPage />} /> {/* Level 3 */}
         <Route path="/models/:brand/:brandId" element={<ModelDetails />} />
         <Route path="/models/:brand/:brandId/:partCategoryName/:partCategoryId" element={<PartDetails />} />

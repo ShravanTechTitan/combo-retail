@@ -5,7 +5,7 @@ export default function Sidebar({ open, handleLogout }) {
   const location = useLocation();
 
   const menuItems = [
-    { name: "Combos", path: "/dashboard/combos", icon: <FaBox /> },
+   
     { name: "Mobiles", path: "/dashboard/mobiles", icon: <FaMobileAlt /> },
     { name: "Subscriptions", path: "/dashboard/subscriptions", icon: <FaFileAlt /> },
     { name: "Device Categories", path: "/dashboard/deviceCategories", icon: <FaFileAlt /> },
