@@ -1,31 +1,34 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { FaPlus } from "react-icons/fa";
 import InputField from "../../components/dashboardComponents/InputField";
 import ActionButtons from "../../components/dashboardComponents/ActionButtons";
 import ConfirmDialog from "../../components/dashboardComponents/ConfirmDialog";
 import api from "../../api/axiosConfig";
 
-
 export default function DeviceCategoryPage() {
-  const [deviceCategories, setdeviceCategories] = useState([]);
+  const [deviceCategories, setDeviceCategories] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [formData, setFormData] = useState({ name: "", description: "" });
+  const [loading, setLoading] = useState(false); // loading for fetch
+  const [deletingId, setDeletingId] = useState(null); // deleting spinner
 
   // Load categories on mount
   useEffect(() => {
-    fetchdeviceCategories();
+    fetchDeviceCategories();
   }, []);
 
-  const fetchdeviceCategories = async () => {
+  const fetchDeviceCategories = async () => {
+    setLoading(true);
     try {
       const res = await api.get("/deviceCategories"); 
-      setdeviceCategories(res.data);
+      setDeviceCategories(res.data);
     } catch (err) {
       console.error("Error fetching deviceCategories:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -36,13 +39,11 @@ export default function DeviceCategoryPage() {
     e.preventDefault();
     try {
       if (editing) {
-        // Update category
         await api.put(`/deviceCategories/${editing._id}`, formData);
       } else {
-        // Create new category
         await api.post("/deviceCategories", formData);
       }
-      fetchdeviceCategories(); // refresh list
+      fetchDeviceCategories();
       setFormData({ name: "", description: "" });
       setEditing(null);
       setShowForm(false);
@@ -57,14 +58,17 @@ export default function DeviceCategoryPage() {
     setShowForm(true);
   };
 
-  const confirmDelete = async (id) => {
+  const confirmDelete = async () => {
+    setDeletingId(deleteId);
     try {
       await api.delete(`/deviceCategories/${deleteId}`);
-      fetchdeviceCategories();
+      fetchDeviceCategories();
       setConfirmOpen(false);
       setDeleteId(null);
     } catch (err) {
       console.error("Error deleting device category:", err);
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -85,37 +89,45 @@ export default function DeviceCategoryPage() {
         </button>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
-        <table className="w-full text-xs md:text-sm">
-          <thead>
-            <tr className="bg-gray-100 dark:bg-gray-800">
-              <th className="px-3 py-2 text-left">Name</th>
-              <th className="px-3 py-2 text-left">Description</th>
-              <th className="px-3 py-2 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {deviceCategories.map((c) => (
-              <tr
-                key={c._id}
-                className="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
-              >
-                <td className="px-3 py-2">{c.name}</td>
-                <td className="px-3 py-2">{c.description}</td>
-                <td className="px-3 py-2 text-center">
-                  <ActionButtons
-                    onEdit={() => handleEdit(c)}
-                    onDelete={() =>  {
-                    setDeleteId(c._id);
-                     setConfirmOpen(true);}}
-                  />
-                </td>
+      {/* Loading */}
+      {loading ? (
+        <div className="flex justify-center items-center h-40">
+          <div className="w-10 h-10 border-4 border-green-500 border-dashed rounded-full animate-spin"></div>
+        </div>
+      ) : (
+        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+          <table className="w-full text-xs md:text-sm">
+            <thead>
+              <tr className="bg-gray-100 dark:bg-gray-800">
+                <th className="px-3 py-2 text-left">Name</th>
+                <th className="px-3 py-2 text-left">Description</th>
+                <th className="px-3 py-2 text-center">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {deviceCategories.map((c) => (
+                <tr
+                  key={c._id}
+                  className="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                >
+                  <td className="px-3 py-2">{c.name}</td>
+                  <td className="px-3 py-2">{c.description}</td>
+                  <td className="px-3 py-2 text-center">
+                    <ActionButtons
+                      onEdit={() => handleEdit(c)}
+                      onDelete={() => {
+                        setDeleteId(c._id);
+                        setConfirmOpen(true);
+                      }}
+                      deleting={deletingId === c._id}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {/* Modal Form */}
       {showForm && (
@@ -159,14 +171,14 @@ export default function DeviceCategoryPage() {
         </div>
       )}
 
-      <ConfirmDialog 
-        isOpen={confirmOpen} 
+      {/* Delete Confirmation */}
+      <ConfirmDialog
+        isOpen={confirmOpen}
         title="Delete Category"
         message="This action cannot be undone. Are you sure you want to delete this category?"
         onCancel={() => setConfirmOpen(false)}
         onConfirm={confirmDelete}
       />
-      
     </div>
   );
 }
