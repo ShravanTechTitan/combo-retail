@@ -1,20 +1,31 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../api/axiosConfig";
 import { Link } from "react-router-dom";
+
 export default function SearchBar({ search, setSearch, type }) {
   const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false); // ✅ loading state
 
   useEffect(() => {
-    if (!search) return setSuggestions([]);
+    if (!search) {
+      setSuggestions([]);
+      setLoading(false);
+      return;
+    }
+
     const fetchSuggestions = async () => {
+      setLoading(true); // start spinner
       try {
-        const res = await axios.get(`/api/search?q=${search}&type=${type}`);
+        const res = await api.get(`/api/search?q=${search}&type=${type}`);
         setSuggestions(res.data);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false); // stop spinner
       }
     };
-    const delay = setTimeout(fetchSuggestions, 300);
+
+    const delay = setTimeout(fetchSuggestions, 300); // debounce
     return () => clearTimeout(delay);
   }, [search, type]);
 
@@ -36,17 +47,23 @@ export default function SearchBar({ search, setSearch, type }) {
         </button>
       )}
 
-      {suggestions.length > 0 && (
+      {(loading || suggestions.length > 0) && (
         <div className="absolute left-0 right-0 bg-white dark:bg-gray-700 border rounded-lg mt-1 shadow-lg z-10">
-          {suggestions.map((item) => (
-            <Link
-              key={item._id}
-              to={`/${type}/${item._id}`}
-              className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600"
-            >
-              {item.name}
-            </Link>
-          ))}
+          {loading && (
+            <div className="flex justify-center items-center py-2">
+              <div className="w-5 h-5 border-2 border-blue-500 border-dashed rounded-full animate-spin"></div>
+            </div>
+          )}
+          {!loading &&
+            suggestions.map((item) => (
+              <Link
+                key={item._id}
+                to={`/${type}/${item._id}`}
+                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600"
+              >
+                {item.name}
+              </Link>
+            ))}
         </div>
       )}
     </div>
