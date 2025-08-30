@@ -340,7 +340,10 @@ export default function ProductManager() {
               <div className="flex justify-end gap-4 sticky bottom-0 bg-white dark:bg-gray-900 py-4">
                 <button
                   type="button"
-                  onClick={() => setShowForm(false)}
+                  onClick={() =>{ 
+                    setShowForm(false)
+                    setForm(initialForm)
+                  }}
                   className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors"
                   disabled={submitting}
                 >
