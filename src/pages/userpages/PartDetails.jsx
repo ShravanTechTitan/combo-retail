@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import Header from "../../components/Header";
 import FilterSearchBar from "../../components/FilterSearchBar";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../api/axiosConfig";
 
 export default function PartDetails() {
   const { brand, brandId, partCategoryId, partCategoryName } = useParams();
@@ -17,7 +17,7 @@ export default function PartDetails() {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.get(
+      const res = await api.get(
         `/products/${brand}/${brandId}/${partCategoryId}`
       );
       setProducts(res.data);

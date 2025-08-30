@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axiosConfig";
 import Header from "../../components/Header";
 import SearchBar from "../../components/SearchBar";
 
@@ -11,7 +11,7 @@ export default function ProductPage() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`/products/${id}`);
+        const res = await api.get(`/products/${id}`);
         setProduct(res.data);
       } catch (err) {
         console.error(err);

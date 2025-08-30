@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import FilterSearchBar from "../../components/FilterSearchBar";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../api/axiosConfig";
 
 export default function ModelDetails() {
   const [products, setProducts] = useState([]);
@@ -19,7 +19,7 @@ export default function ModelDetails() {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.get(`/products/${brand}/${brandId}`);
+      const res = await api.get(`/products/${brand}/${brandId}`);
       setProducts(res.data);
     } catch (err) {
       console.error(err);
