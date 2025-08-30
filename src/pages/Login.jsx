@@ -1,15 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { loginUser, registerUser } from "../api/authApi";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
-  const [formData, setFormData] = useState({ email: "", password: "", name: "",number:"" });
+  const [formData, setFormData] = useState({ email: "", password: "", name: "", number: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [toast, setToast] = useState({ message: "", show: false }); // toast state
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const showToast = (message) => {
+    setToast({ message, show: true });
+    setTimeout(() => setToast({ message: "", show: false }), 3000); // hide after 3s
   };
 
   const handleSubmit = async (e) => {
@@ -25,8 +31,8 @@ export default function AuthPage() {
       if (data.token) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("email", data.email || formData.email);
-        alert(`${isLogin ? "Login" : "Signup"} successful! 🎉`);
-        window.location.href = "/";
+        showToast(`${isLogin ? "Login" : "Signup"} successful! 🎉`);
+        setTimeout(() => window.location.href = "/", 1500); // redirect after toast
       }
     } catch (err) {
       console.error(err);
@@ -40,7 +46,7 @@ export default function AuthPage() {
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
       <Header />
       <div className="flex items-center justify-center min-h-screen px-4">
-        <div className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-md">
+        <div className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-md relative">
           <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
             {isLogin ? "Login" : "Sign Up"}
           </h2>
@@ -52,24 +58,24 @@ export default function AuthPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div>
-              <input
-                type="text"
-                name="name"
-                placeholder="Full Name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full px-4 py-3 text-sm sm:text-base rounded-lg border dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
-                required
-              />
-              <input
-                type="Number"
-                name="number"
-                placeholder="Mobile Number"
-                value={formData.number}
-                onChange={handleChange}
-                className="w-full px-4 py-3 mt-4 text-sm sm:text-base rounded-lg border dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
-                required
-              />
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Full Name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 text-sm sm:text-base rounded-lg border dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+                <input
+                  type="number"
+                  name="number"
+                  placeholder="Mobile Number"
+                  value={formData.number}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 mt-4 text-sm sm:text-base rounded-lg border dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  required
+                />
               </div>
             )}
 
@@ -111,8 +117,28 @@ export default function AuthPage() {
               {isLogin ? "Sign Up" : "Login"}
             </button>
           </p>
+
+          {/* Toast Notification */}
+          {toast.show && (
+            <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg animate-slide-up z-50">
+              {toast.message}
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Tailwind animation */}
+      <style>
+        {`
+          @keyframes slide-up {
+            0% { transform: translateY(50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+          }
+          .animate-slide-up {
+            animation: slide-up 0.5s ease-out forwards;
+          }
+        `}
+      </style>
     </div>
   );
 }
