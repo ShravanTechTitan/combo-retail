@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // production URL
+
 const api = axios.create({
-  baseURL: "https://combo-retailsbakcend-production.up.railway.app/api",
+  baseURL: `${BACKEND_URL}/api`,
   headers: { "Content-Type": "application/json" },
 });
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ComboCard from "../components/ComboCard";
 import SearchBar from "../components/SearchBar";
 import Header from "../components/Header";
-import axios from "axios"
+import api from "../api/axiosConfig"
 
 
 import { useNavigate } from "react-router-dom";
@@ -14,11 +14,10 @@ export default function Home() {
 
   const navigate = useNavigate();
   
- const fetchBrands = async () => {
+
+const fetchBrands = async () => {
   try {
-    const res = await axios.get(
-      "https://combo-retailsbakcend-production.up.railway.app/api/brands"
-    );
+    const res = await api.get("/brands");
     setBrands(res.data);
   } catch (error) {
     console.error("Error fetching brands:", error);
