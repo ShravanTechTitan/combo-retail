@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { FaPlus } from "react-icons/fa";
 import InputField from "../../components/dashboardComponents/InputField";
 import ActionButtons from "../../components/dashboardComponents/ActionButtons";
@@ -11,47 +10,52 @@ export default function PartCategoryPage() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
-const [deleteId, setDeleteId] = useState(null);
+  const [deleteId, setDeleteId] = useState(null);
   const [formData, setFormData] = useState({ name: "", description: "" });
 
-  useEffect(()=>{
-    fatchPartCategories()
-  },[])
+  // ✅ Loading states
+  const [loadingData, setLoadingData] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
- const fatchPartCategories = async()=>{
-  try{
-    const res = await api.get("/partCategories")
-    console.log(res)
-    setPartCategories(res.data);
-  }catch(err){
-    console.error("Error fetching partCategories:", err);
-  }
+  useEffect(() => {
+    fetchPartCategories();
+  }, []);
 
- }
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
-
-
-
-  const handleSubmit = async(e) => {
-    e.preventDefault();
-    try{
-    if (editing) {
-      await api.put(`partCategories/${editing._id}`, formData);
-    } else {
-      await api.post("/partCategories", formData);
+  const fetchPartCategories = async () => {
+    setLoadingData(true);
+    try {
+      const res = await api.get("/partCategories");
+      setPartCategories(res.data);
+    } catch (err) {
+      console.error("Error fetching partCategories:", err);
+    } finally {
+      setLoadingData(false);
     }
-     fatchPartCategories();
-    setFormData({ name: "", description: "" });
-    setEditing(null);
-    setShowForm(false);
-  
-}catch(err){
-  console.error("Error saving part category:", err);
-  }
+  };
 
-}
-  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      if (editing) {
+        await api.put(`/partCategories/${editing._id}`, formData);
+      } else {
+        await api.post("/partCategories", formData);
+      }
+      fetchPartCategories();
+      setFormData({ name: "", description: "" });
+      setEditing(null);
+      setShowForm(false);
+    } catch (err) {
+      console.error("Error saving part category:", err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const handleEdit = (cat) => {
     setEditing(cat);
@@ -59,17 +63,19 @@ const [deleteId, setDeleteId] = useState(null);
     setShowForm(true);
   };
 
-  const confirmDelete = async (id)=>{
-    console.log(id)
-    try{
-      api.delete(`/partCategories/${deleteId}`)
-      fatchPartCategories();
+  const confirmDelete = async () => {
+    setDeleting(true);
+    try {
+      await api.delete(`/partCategories/${deleteId}`);
+      fetchPartCategories();
       setConfirmOpen(false);
       setDeleteId(null);
-    }catch(err){
-       console.error("Error deleting device category:", err);
+    } catch (err) {
+      console.error("Error deleting device category:", err);
+    } finally {
+      setDeleting(false);
     }
-  }
+  };
 
   return (
     <div className="p-4 text-gray-800 dark:text-gray-200">
@@ -89,33 +95,44 @@ const [deleteId, setDeleteId] = useState(null);
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
-        <table className="w-full text-xs md:text-sm">
-          <thead>
-            <tr className="bg-gray-100 dark:bg-gray-800">
-              <th className="px-3 py-2 text-left">Name</th>
-              <th className="px-3 py-2 text-left">Description</th>
-              <th className="px-3 py-2 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Partcategories.map((c) => (
-              <tr
-                key={c._id}
-                className="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
-              >
-                <td className="px-3 py-2">{c.name}</td>
-                <td className="px-3 py-2">{c.description}</td>
-                <td className="px-3 py-2 text-center">
-                  <ActionButtons onEdit={() => handleEdit(c)} onDelete={() => {
-                    setDeleteId(c._id);
-                     setConfirmOpen(true);}} />
-                </td>
+      {loadingData ? (
+        <div className="flex justify-center items-center h-32">
+          <div className="w-10 h-10 border-4 border-green-500 border-dashed rounded-full animate-spin"></div>
+        </div>
+      ) : (
+        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+          <table className="w-full text-xs md:text-sm">
+            <thead>
+              <tr className="bg-gray-100 dark:bg-gray-800">
+                <th className="px-3 py-2 text-left">Name</th>
+                <th className="px-3 py-2 text-left">Description</th>
+                <th className="px-3 py-2 text-center">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {Partcategories.map((c) => (
+                <tr
+                  key={c._id}
+                  className="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                >
+                  <td className="px-3 py-2">{c.name}</td>
+                  <td className="px-3 py-2">{c.description}</td>
+                  <td className="px-3 py-2 text-center">
+                    <ActionButtons
+                      onEdit={() => handleEdit(c)}
+                      onDelete={() => {
+                        setDeleteId(c._id);
+                        setConfirmOpen(true);
+                      }}
+                      disabled={deleting && deleteId === c._id}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {/* Modal Form */}
       {showForm && (
@@ -144,13 +161,18 @@ const [deleteId, setDeleteId] = useState(null);
                   type="button"
                   onClick={() => setShowForm(false)}
                   className="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg text-sm"
+                  disabled={submitting}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-sm font-medium"
+                  className="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-sm font-medium flex items-center gap-2"
+                  disabled={submitting}
                 >
+                  {submitting && (
+                    <div className="w-4 h-4 border-2 border-white border-dashed rounded-full animate-spin"></div>
+                  )}
                   Save
                 </button>
               </div>
@@ -158,14 +180,16 @@ const [deleteId, setDeleteId] = useState(null);
           </div>
         </div>
       )}
-      <ConfirmDialog 
-  isOpen={confirmOpen} 
-  title="Delete Category"
-  message="This action cannot be undone. Are you sure you want to delete this category?"
-  onCancel={() => setConfirmOpen(false)}
-  onConfirm={confirmDelete}
-/>
 
+      {/* Confirm Dialog */}
+      <ConfirmDialog
+        isOpen={confirmOpen}
+        title="Delete Category"
+        message="This action cannot be undone. Are you sure you want to delete this category?"
+        onCancel={() => setConfirmOpen(false)}
+        onConfirm={confirmDelete}
+        loading={deleting}
+      />
     </div>
   );
 }
