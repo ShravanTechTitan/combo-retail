@@ -16,7 +16,7 @@ export default function SearchBar({ search, setSearch, type }) {
     const fetchSuggestions = async () => {
       setLoading(true); // start spinner
       try {
-        const res = await api.get(`/api/search?q=${search}&type=${type}`);
+        const res = await api.get(`/search?q=${search}&type=${type}`);
         setSuggestions(res.data);
       } catch (err) {
         console.error(err);
