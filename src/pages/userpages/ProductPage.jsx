@@ -7,20 +7,32 @@ import SearchBar from "../../components/SearchBar";
 export default function ProductPage() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
+        setLoading(true);
         const res = await api.get(`/products/${id}`);
         setProduct(res.data);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchProduct();
   }, [id]);
 
-  if (!product) return <div className="p-6 text-gray-500">Loading...</div>;
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="w-12 h-12 border-4 border-green-500 border-dashed rounded-full animate-spin"></div>
+      </div>
+    );
+
+  if (!product)
+    return <div className="p-6 text-gray-500">Product not found.</div>;
 
   return (
     <>
