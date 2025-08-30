@@ -61,9 +61,9 @@ export default function ModelPage() {
     try{
       if (editingId) {
         console.log(editingId)
-        await axios.put(`/api/models/${editingId}`,payload);
+        await axios.put(`/models/${editingId}`,payload);
       } else {
-        await axios.post("/api/models", payload);
+        await axios.post("/models", payload);
       }
       setForm({ name: "", brand: "", series: "" });
       setShowForm(false);
@@ -77,7 +77,7 @@ export default function ModelPage() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/models/${id}`);
+      await axios.delete(`/models/${id}`);
       fetchModels()
     } catch (error) {
       console.error("Error deleting brand:", error);

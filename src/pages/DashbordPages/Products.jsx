@@ -34,7 +34,7 @@ export default function ProductManager() {
   
   const fetchBrands = async () => {
     try {
-      const res = await axios.get("/api/brands");
+      const res = await axios.get("/brands");
       setBrands(res.data)
       
     } catch (error) {
@@ -43,20 +43,20 @@ export default function ProductManager() {
   };
   const fetchModels = async () => {
     try {
-      const res = await axios.get("/api/models");
+      const res = await axios.get("/models");
       setModels(res.data)
     } catch (error) {
       console.error("Error fetching modelss:", error);
     }
   };
   const fetchPartCategories =async()=>{
-  const res = await axios.get("/api/partCategories"); 
+  const res = await axios.get("/partCategories"); 
   
   setPartCategory(res.data)
 
 }
   const fetchProducts =async()=>{
-  const res = await axios.get("/api/products"); 
+  const res = await axios.get("/products"); 
 
   setProducts(res.data)
     }

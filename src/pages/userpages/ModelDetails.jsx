@@ -15,7 +15,7 @@ export default function ModelDetails() {
   // Fetch products for the brand
   const fetchProducts = async () => {
     try {
-      const res = await axios.get(`/api/products/${brand}/${brandId}`);
+      const res = await axios.get(`/products/${brand}/${brandId}`);
       setProducts(res.data);
     } catch (err) {
       console.error(err);

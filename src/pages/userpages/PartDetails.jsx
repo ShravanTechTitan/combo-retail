@@ -14,7 +14,7 @@ export default function PartDetails() {
   const fetchProducts = async () => {
     try {
       const res = await axios.get(
-        `/api/products/${brand}/${brandId}/${partCategoryId}`
+        `/products/${brand}/${brandId}/${partCategoryId}`
       );
       setProducts(res.data);
       setFilteredProducts(res.data);

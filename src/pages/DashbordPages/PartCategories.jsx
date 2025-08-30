@@ -20,7 +20,7 @@ const [deleteId, setDeleteId] = useState(null);
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
  const fatchPartCategories = async()=>{
   try{
-    const res = await axios.get("/api/partCategories")
+    const res = await axios.get("/partCategories")
     console.log(res)
     setPartCategories(res.data);
   }catch(err){
@@ -36,9 +36,9 @@ const [deleteId, setDeleteId] = useState(null);
     e.preventDefault();
     try{
     if (editing) {
-      await axios.put(`/api/partCategories/${editing._id}`, formData);
+      await axios.put(`partCategories/${editing._id}`, formData);
     } else {
-      await axios.post("/api/partCategories", formData);
+      await axios.post("/partCategories", formData);
     }
      fatchPartCategories();
     setFormData({ name: "", description: "" });
@@ -61,7 +61,7 @@ const [deleteId, setDeleteId] = useState(null);
   const confirmDelete = async (id)=>{
     console.log(id)
     try{
-      axios.delete(`/api/partCategories/${deleteId}`)
+      axios.delete(`/partCategories/${deleteId}`)
       fatchPartCategories();
       setConfirmOpen(false);
       setDeleteId(null);
