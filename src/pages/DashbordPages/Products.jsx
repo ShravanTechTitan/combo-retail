@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import MultiSelect from "../../components/dashboardComponents/MultiSelect";
+import ConfirmDialog from "../../components/dashboardComponents/ConfirmDialog";
 import api from "../../api/axiosConfig";
 
 export default function ProductManager() {
@@ -32,6 +33,10 @@ export default function ProductManager() {
   const [loadingData, setLoadingData] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  // Track which product is pending delete
+  const [pendingDeleteId, setPendingDeleteId] = useState(null);
 
   // Fetch functions
   const fetchBrands = async () => {
@@ -142,15 +147,22 @@ export default function ProductManager() {
     setShowForm(true);
   };
 
-  const handleDelete = async (id) => {
-    setDeletingId(id);
+  const handleDeleteConfirm = (id) => {
+    setPendingDeleteId(id);
+    setConfirmOpen(true);
+  };
+
+  const handleDelete = async () => {
+    setDeletingId(pendingDeleteId);
     try {
-      await api.delete(`/products/${id}`);
-      setProducts(products.filter((p) => p._id !== id));
+      await api.delete(`/products/${pendingDeleteId}`);
+      setProducts(products.filter((p) => p._id !== pendingDeleteId));
     } catch (err) {
       console.error(err);
     } finally {
       setDeletingId(null);
+      setConfirmOpen(false);
+      setPendingDeleteId(null);
     }
   };
 
@@ -170,7 +182,7 @@ export default function ProductManager() {
       {/* Table */}
       {loadingData ? (
         <div className="flex justify-center items-center h-64">
-          <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-green-500 border-dashed rounded-full animate-spin"></div>
         </div>
       ) : (
         <div className="overflow-x-auto">
@@ -195,7 +207,10 @@ export default function ProductManager() {
                 </tr>
               ) : (
                 products.map((p) => (
-                  <tr key={p._id} className="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                  <tr
+                    key={p._id}
+                    className="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  >
                     <td className="p-2 text-sm">{p._id}</td>
                     <td className="p-2 text-sm">{p.name}</td>
                     <td className="p-2 text-sm">{p.brandIds.map((b) => b.name).join(", ")}</td>
@@ -211,12 +226,12 @@ export default function ProductManager() {
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(p._id)}
+                        onClick={() => handleDeleteConfirm(p._id)}
                         className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded flex items-center justify-center"
                         disabled={deletingId === p._id}
                       >
                         {deletingId === p._id ? (
-                          <div className="w-4 h-4 border-2 border-white border-dashed rounded-full animate-spin"></div>
+                          <div className="w-4 h-4 border-2 border-green-500 border-dashed rounded-full animate-spin"></div>
                         ) : (
                           "Delete"
                         )}
@@ -336,7 +351,9 @@ export default function ProductManager() {
                   className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2"
                   disabled={submitting}
                 >
-                  {submitting && <div className="w-4 h-4 border-2 border-white border-dashed rounded-full animate-spin"></div>}
+                  {submitting && (
+                    <div className="w-4 h-4 border-2 border-white border-dashed rounded-full animate-spin"></div>
+                  )}
                   Save Product
                 </button>
               </div>
@@ -344,6 +361,15 @@ export default function ProductManager() {
           </div>
         </div>
       )}
+
+      {/* Confirm Delete */}
+      <ConfirmDialog
+        isOpen={confirmOpen}
+        title="Delete Product"
+        message="This action cannot be undone. Are you sure you want to delete this product?"
+        onCancel={() => setConfirmOpen(false)}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 }
