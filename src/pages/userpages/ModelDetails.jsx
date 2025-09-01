@@ -3,6 +3,7 @@ import Header from "../../components/Header";
 import FilterSearchBar from "../../components/FilterSearchBar";
 import { useEffect, useState } from "react";
 import api from "../../api/axiosConfig";
+import slugify from "slugify";
 
 export default function ModelDetails() {
   const [products, setProducts] = useState([]);
@@ -10,7 +11,7 @@ export default function ModelDetails() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false); // spinner state
   const [error, setError] = useState(""); // error state
-
+  
   const { brand, brandId } = useParams();
   const navigate = useNavigate();
 
@@ -91,11 +92,12 @@ export default function ModelDetails() {
             {filteredCategories.map((category) => (
               <div
                 key={category._id}
-                onClick={() =>
+                onClick={() =>{
+                  const slug = slugify(category.name, { lower: true });
                   navigate(
-                    `/models/${brand}/${brandId}/${category.name}/${category._id}`
+                    `/models/${brand}/${brandId}/${slug}/${category._id}`
                   )
-                }
+                }}
                 className="cursor-pointer bg-white dark:bg-gray-800 p-6 rounded-xl shadow hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200"
               >
                 <h3 className="text-lg font-semibold dark:text-white capitalize mb-2">
