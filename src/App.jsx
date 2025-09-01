@@ -17,6 +17,7 @@ import Model from "./pages/DashbordPages/ModelPage.jsx";
 import ModelDetails from "./pages/userpages/ModelDetails.jsx";
 import PartDetails from "./pages/userpages/PartDetails.jsx";
 import ProductPage from "./pages/userpages/ProductPage.jsx";
+import AdminDashboard from "./pages/DashbordPages/AdminDashboard.jsx";
 
 // App.jsx
 
@@ -45,6 +46,7 @@ function App() {
       <Route path="/" element={<Home />} />
          <Route path="/login" element={<Login />} />
       <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route path="adminDashboard" element={<AdminDashboard></AdminDashboard>}></Route>
         <Route path="deviceCategories" element={<DeviceCategories/>}></Route>
         <Route path="partCategories" element={<PartCategories/>}></Route>
         <Route path="BrandPage" element={<BrandPage></BrandPage>}/>

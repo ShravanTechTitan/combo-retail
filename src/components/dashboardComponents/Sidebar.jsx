@@ -1,12 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { FaBox, FaMobileAlt, FaFileAlt } from "react-icons/fa";
+import { FaBox, FaMobileAlt, FaFileAlt,FaUsers } from "react-icons/fa";
 
 export default function Sidebar({ open, handleLogout }) {
   const location = useLocation();
 
   const menuItems = [
    
-    { name: "Mobiles", path: "/dashboard/mobiles", icon: <FaMobileAlt /> },
+    {name:"Admin Dashbord", path:"/dashboard/adminDashboard", icon:<FaUsers />},
     { name: "Subscriptions", path: "/dashboard/subscriptions", icon: <FaFileAlt /> },
     { name: "Device Categories", path: "/dashboard/deviceCategories", icon: <FaFileAlt /> },
     { name: "Part Categories", path: "/dashboard/PartCategories", icon: <FaFileAlt /> },
