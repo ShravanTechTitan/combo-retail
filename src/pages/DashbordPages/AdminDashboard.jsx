@@ -56,10 +56,11 @@ const AdminDashboard = () => {
     }
   };
 
+  // ✅ Loader
   if (loading)
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-gray-500 dark:text-gray-300">Loading...</p>
+      <div className="flex justify-center items-center h-screen bg-gray-100 dark:bg-gray-900">
+        <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
 
@@ -70,6 +71,7 @@ const AdminDashboard = () => {
       </h1>
 
       <div className="space-y-4">
+        
         {users.map((u) => (
           <div
             key={u._id}
@@ -77,16 +79,15 @@ const AdminDashboard = () => {
           >
             {/* User Info */}
             <div className="flex-1 space-y-1">
-              <p className="font-semibold text-gray-800 dark:text-gray-200">{u.name}</p>
+              <p className="font-semibold text-gray-800 dark:text-gray-200">
+                {u.name}
+              </p>
               <p className="text-gray-600 dark:text-gray-400">{u.email}</p>
               <p className="text-gray-600 dark:text-gray-400">
-                Role: <span className="font-medium">{u.role}</span>
+                Number: <span className="font-medium">{u.number}</span>
               </p>
               <p className="text-gray-600 dark:text-gray-400">
-                Subscription:{" "}
-                {u.subscriptionActive
-                  ? `Active until ${new Date(u.subscriptionExpiry).toLocaleDateString()}`
-                  : "Inactive"}
+                Role: <span className="font-medium">{u.role}</span>
               </p>
             </div>
 
