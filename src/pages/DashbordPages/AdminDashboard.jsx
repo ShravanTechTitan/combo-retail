@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../api/axiosConfig";
 import ConfirmDialog from "../../components/dashboardComponents/ConfirmDialog"; // adjust path if needed
 
 const AdminDashboard = () => {
@@ -16,7 +16,7 @@ const AdminDashboard = () => {
   // Fetch all users (superadmin only)
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("/api/admin/users", {
+      const res = await api.get("/admin/users", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(res.data);
@@ -42,8 +42,8 @@ const AdminDashboard = () => {
   const handleConfirm = async () => {
     setDialogOpen(false);
     try {
-      const res = await axios.put(
-        `/api/admin/role/${selectedUser._id}`,
+      const res = await api.put(
+        `/admin/role/${selectedUser._id}`,
         { role: newRole },
         { headers: { Authorization: `Bearer ${token}` } }
       );
