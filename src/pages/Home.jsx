@@ -33,29 +33,39 @@ export default function Home() {
       <Header />
 
       {/* Hero Section */}
-      <div className="relative w-full h-56 flex flex-col items-center justify-center">
-        <img
-          src="https://www.shutterstock.com/image-photo/technician-repairing-smartphones-motherboard-lab-260nw-2225064955.jpg"
-          alt="Repair on Mobile"
-          className="absolute inset-0 w-full h-full object-cover opacity-30"
-        />
+     {/* Hero Section */}
+<div className="relative w-full h-56 flex flex-col items-center justify-center">
+  {/* Desktop Image */}
+  <img
+    src="https://www.shutterstock.com/image-photo/technician-repairing-smartphones-motherboard-lab-260nw-2225064955.jpg" // desktop image
+    alt="Repair on Mobile"
+    className="hidden md:block absolute inset-0 w-full h-full object-cover opacity-30"
+  />
 
-        {/* Search Bar on Top */}
-        <div className="relative z-10 w-full max-w-md px-4">
-          <SearchBar
-            search={search}
-            setSearch={setSearch}
-            endpoint="/api/products/search"
-            linkBuilder={(item) => `/product/${item._id}`}
-            type={"product"}
-          />
-        </div>
+  {/* Mobile Image */}
+  <img
+    src="https://www.shutterstock.com/image-photo/technician-repairing-inside-mobile-phone-260nw-1907032345.jpg" // mobile image
+    alt="Repair on Mobile"
+    className="block md:hidden absolute inset-0 w-full h-full object-cover opacity-30"
+  />
 
-        {/* Hero Heading Below Search */}
-        <h1 className="relative z-10 text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mt-6 text-center">
-          Repair On Mobile – Choose Your Brand
-        </h1>
-      </div>
+  {/* Search Bar */}
+  <div className="relative z-10 w-full max-w-md px-4">
+    <SearchBar
+      search={search}
+      setSearch={setSearch}
+      endpoint="/api/products/search"
+      linkBuilder={(item) => `/product/${item._id}`}
+      type={"product"}
+    />
+  </div>
+
+  {/* Hero Heading */}
+  <h1 className="relative z-10 text-sm sm:text-lg md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mt-4 text-center px-2">
+    Repair On Mobile – Choose Your Brand
+  </h1>
+</div>
+
 
       {/* Brands / Spinner */}
       {loading ? (
