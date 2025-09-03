@@ -4,6 +4,7 @@ import SearchBar from "../components/SearchBar";
 import Header from "../components/Header";
 import api from "../api/axiosConfig";
 import { useNavigate } from "react-router-dom";
+import slugify from "slugify";
 
 export default function Home() {
   const [search, setSearch] = useState("");
@@ -53,7 +54,9 @@ export default function Home() {
           {brands.map((m) => (
             <div
               key={m._id}
-              onClick={() => navigate(`/models/${m.name}/${m._id}`)}
+              onClick={() =>{
+                const slug = slugify(m.name, { lower: true });
+                 navigate(`/models/${slug}/${m._id}`)}}
               className="cursor-pointer bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition-transform transform hover:-translate-y-2 p-6 flex flex-col items-center text-center"
             >
               <div className="w-16 h-16 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-xl mb-3">
