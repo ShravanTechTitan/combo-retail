@@ -90,12 +90,12 @@ export default function PartDetails() {
         className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow hover:shadow-lg transition"
       >
         <h3 className="text-lg font-semibold dark:text-white">{p.name}</h3>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-gray-500 mt-3 dark:text-gray-400">
           <span className="font-semibold">Supported Models:</span>{" "}
           {p.modelIds.map((m) => m.name).join(", ")}
         </p>
         <span className="block mt-2 font-bold text-blue-600 dark:text-blue-400">
-          ₹{p.price}
+         
         </span>
       </div>
     ))}

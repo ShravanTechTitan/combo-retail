@@ -9,9 +9,7 @@ export default function AuthPage() {
   const [error, setError] = useState("");
   const [toast, setToast] = useState({ message: "", show: false });
 
-  // Forgot password states
-  const [forgotPasswordStep, setForgotPasswordStep] = useState(false); // shows forgot password form
-  const [otpStep, setOtpStep] = useState(false); // shows OTP + New Password step
+  const [forgotPasswordStep, setForgotPasswordStep] = useState(false);
   const [otpData, setOtpData] = useState({ email: "", otp: "", newPassword: "" });
 
   const handleChange = (e) => {
@@ -29,13 +27,15 @@ export default function AuthPage() {
     setLoading(true);
     setError("");
     try {
-      const data = isLogin ? await loginUser(formData) : await registerUser(formData);
+      const data = isLogin
+        ? await loginUser(formData)
+        : await registerUser(formData);
 
       if (data.token) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("email", data.email || formData.email);
         showToast(`${isLogin ? "Login" : "Signup"} successful! 🎉`);
-        setTimeout(() => (window.location.href = "/"), 1500);
+        setTimeout(() => window.location.href = "/", 1500);
       }
     } catch (err) {
       setError(err.response?.data?.message || err.message || "Something went wrong!");
@@ -50,7 +50,7 @@ export default function AuthPage() {
       setLoading(true);
       await sendOtp({ email: otpData.email });
       showToast("OTP sent! Check your email/SMS.");
-      setOtpStep(true); // move to OTP step after sending
+      setForgotPasswordStep(true);
     } catch (err) {
       showToast(err.response?.data?.message || "Failed to send OTP");
     } finally {
@@ -66,7 +66,6 @@ export default function AuthPage() {
       await resetPassword({ token, newPassword: otpData.newPassword });
       showToast("Password reset successful! 🎉");
       setForgotPasswordStep(false);
-      setOtpStep(false);
       setOtpData({ email: "", otp: "", newPassword: "" });
     } catch (err) {
       showToast(err.response?.data?.message || "OTP verification failed");
@@ -81,141 +80,61 @@ export default function AuthPage() {
       <div className="flex flex-col items-center justify-center flex-1 px-4 py-12">
         <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-md">
           <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-6">
-            {forgotPasswordStep ? "Reset Password" : isLogin ? "Login" : "Sign Up"}
+            {isLogin ? "Login" : "Sign Up"}
           </h2>
 
-          {/* Login / Signup Form */}
-          {!forgotPasswordStep && (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {!isLogin && (
-                <>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Full Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                  <input
-                    type="number"
-                    name="number"
-                    placeholder="Mobile Number"
-                    value={formData.number}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </>
-              )}
+          {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-3 text-center">{error}</div>}
 
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
-                required
-              />
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
-                required
-              />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {!isLogin && (
+              <>
+                <input type="text" name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500" required />
+                <input type="number" name="number" placeholder="Mobile Number" value={formData.number} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500" required />
+              </>
+            )}
 
+            <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500" required />
+            <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500" required />
+
+            <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition disabled:opacity-50">
+              {loading ? "Please wait..." : isLogin ? "Login" : "Sign Up"}
+            </button>
+          </form>
+
+          <div className="flex justify-between mt-4 text-sm text-gray-600 dark:text-gray-300">
+            <span>
+              {isLogin ? "Don’t have an account?" : "Already have an account?"}{" "}
+              <button onClick={() => setIsLogin(!isLogin)} className="text-blue-600 font-semibold">{isLogin ? "Sign Up" : "Login"}</button>
+            </span>
+            {isLogin && (
               <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-              >
-                {loading ? "Please wait..." : isLogin ? "Login" : "Sign Up"}
-              </button>
-            </form>
-          )}
+  onClick={() => setForgotPasswordStep(!forgotPasswordStep)}
+  className="text-blue-600 hover:underline"
+>
+  Forgot password?
+</button>
 
-          {error && (
-            <div className="bg-red-100 text-red-700 p-2 rounded mb-3 text-center">{error}</div>
-          )}
+            )}
+          </div>
 
-          {/* Forgot Password / OTP Form */}
-          {forgotPasswordStep && (
+          {/* Inline Forgot Password / OTP */}
+          {isLogin && forgotPasswordStep && (
             <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg space-y-3">
-              {!otpStep ? (
+              {!otpData.otp ? (
                 <>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Enter your email"
-                    value={otpData.email}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border dark:bg-gray-600 dark:text-white"
-                  />
-                  <button
-                    onClick={handleSendOtp}
-                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
-                  >
-                    Send OTP
-                  </button>
+                  <input type="email" name="email" placeholder="Enter your email" value={otpData.email} onChange={handleChange} className="w-full px-4 py-2 rounded-lg border dark:bg-gray-600 dark:text-white" />
+                  <button onClick={handleSendOtp} className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Send OTP</button>
                 </>
               ) : (
                 <>
-                  <input
-                    type="text"
-                    name="otp"
-                    placeholder="Enter OTP"
-                    value={otpData.otp}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border dark:bg-gray-600 dark:text-white"
-                  />
-                  <input
-                    type="password"
-                    name="newPassword"
-                    placeholder="New Password"
-                    value={otpData.newPassword}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border dark:bg-gray-600 dark:text-white"
-                  />
-                  <button
-                    onClick={handleResetPassword}
-                    className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
-                  >
-                    Reset Password
-                  </button>
+                  <input type="text" name="otp" placeholder="Enter OTP" value={otpData.otp} onChange={handleChange} className="w-full px-4 py-2 rounded-lg border dark:bg-gray-600 dark:text-white" />
+                  <input type="password" name="newPassword" placeholder="New Password" value={otpData.newPassword} onChange={handleChange} className="w-full px-4 py-2 rounded-lg border dark:bg-gray-600 dark:text-white" />
+                  <button onClick={handleResetPassword} className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">Reset Password</button>
                 </>
               )}
             </div>
           )}
 
-          {/* Switch Login / Signup / Forgot Password Links */}
-          {!forgotPasswordStep && (
-            <div className="flex justify-between mt-4 text-sm text-gray-600 dark:text-gray-300">
-              <span>
-                {isLogin ? "Don’t have an account?" : "Already have an account?"}{" "}
-                <button onClick={() => setIsLogin(!isLogin)} className="text-blue-600 font-semibold">
-                  {isLogin ? "Sign Up" : "Login"}
-                </button>
-              </span>
-              {isLogin && (
-                <button
-                  onClick={() => {
-                    setForgotPasswordStep(true);
-                    setOtpStep(false);
-                  }}
-                  className="text-blue-600 hover:underline"
-                >
-                  Forgot password?
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* Toast */}
           {toast.show && (
             <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg animate-slide-up z-50">
               {toast.message}

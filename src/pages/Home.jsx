@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import ComboCard from "../components/ComboCard";
 import SearchBar from "../components/SearchBar";
 import Header from "../components/Header";
 import api from "../api/axiosConfig";
@@ -33,40 +32,61 @@ export default function Home() {
       {/* Header */}
       <Header />
 
-      {/* Search Bar */}
-      <div className="flex justify-center p-4">
-        <SearchBar
-          search={search}
-          setSearch={setSearch}
-          endpoint="/api/products/search"
-          linkBuilder={(item) => `/product/${item._id}`}
-          type={"product"}
+      {/* Hero Section */}
+      <div className="relative w-full h-56 flex flex-col items-center justify-center">
+        <img
+          src="https://www.shutterstock.com/image-photo/technician-repairing-smartphones-motherboard-lab-260nw-2225064955.jpg"
+          alt="Repair on Mobile"
+          className="absolute inset-0 w-full h-full object-cover opacity-30"
         />
+
+        {/* Search Bar on Top */}
+        <div className="relative z-10 w-full max-w-md px-4">
+          <SearchBar
+            search={search}
+            setSearch={setSearch}
+            endpoint="/api/products/search"
+            linkBuilder={(item) => `/product/${item._id}`}
+            type={"product"}
+          />
+        </div>
+
+        {/* Hero Heading Below Search */}
+        <h1 className="relative z-10 text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mt-6 text-center">
+          Repair On Mobile – Choose Your Brand
+        </h1>
       </div>
 
       {/* Brands / Spinner */}
       {loading ? (
-        <div className="flex justify-center items-center h-64">
+        <div className="flex justify-center items-center h-64 mt-6">
           <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-4 mt-6">
           {brands.map((m) => (
             <div
               key={m._id}
-              onClick={() =>{
+              onClick={() => {
                 const slug = slugify(m.name, { lower: true });
-                 navigate(`/models/${slug}/${m._id}`)}}
-              className="cursor-pointer bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition-transform transform hover:-translate-y-2 p-6 flex flex-col items-center text-center"
+                navigate(`/models/${slug}/${m._id}`);
+              }}
+              className="cursor-pointer bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 p-5 flex flex-col items-center text-sm text-center"
             >
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-xl mb-3">
+              {/* Brand initials circle */}
+              <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg mb-2">
                 {m.name.charAt(0)}
               </div>
-              <h3 className="text-lg font-semibold dark:text-white">{m.name}</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+
+              {/* Brand Name */}
+              <h3 className="text-base font-semibold dark:text-white">{m.name}</h3>
+
+              {/* Category */}
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 {m.deviceCategoryId.name}
               </p>
-              <span className="text-sm font-medium text-green-600 dark:text-blue-400 hover:underline">
+
+              <span className="text-xs font-medium text-blue-600 dark:text-blue-400 mt-2 hover:underline">
                 View Spare Parts →
               </span>
             </div>
