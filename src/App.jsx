@@ -3,7 +3,7 @@ import Home from "./pages/Home.jsx";
 import DashboardLayout from "./pages/DashbordPages/DashboardLayout.jsx";
 import Combos from "./pages/DashbordPages/Combos.jsx";
 import Mobiles from "./pages/Mobiles.jsx";
-import Subscriptions from "./pages/Subscriptions.jsx";
+import Subscriptions from "./pages/DashbordPages/Subscriptions.jsx";
 import Login from "./pages/Login.jsx";
 import { useEffect, useState } from "react";
 import {jwtDecode} from "jwt-decode";
@@ -18,6 +18,8 @@ import ModelDetails from "./pages/userpages/ModelDetails.jsx";
 import PartDetails from "./pages/userpages/PartDetails.jsx";
 import ProductPage from "./pages/userpages/ProductPage.jsx";
 import AdminDashboard from "./pages/DashbordPages/AdminDashboard.jsx";
+import Subscribe from "./pages/userpages/Subscribe.jsx";
+import AdminSubscriptions from "./pages/DashbordPages/AdminSubscriptions.jsx";
 
 // App.jsx
 
@@ -55,11 +57,13 @@ function App() {
         <Route path="combos" element={<Combos />} />
         <Route path="mobiles" element={<Mobiles />} />
         <Route path="subscriptions" element={<Subscriptions />} />
+        <Route path="AdminSubscriptions" element={<AdminSubscriptions></AdminSubscriptions>}/>
       </Route>
         <Route path="/combo/:id/:modelId" element={<ModelPage />} /> {/* Level 3 */}
         <Route path="/models/:brand/:brandId" element={<ModelDetails />} />
         <Route path="/models/:brand/:brandId/:partCategoryName/:partCategoryId" element={<PartDetails />} />
          <Route path="/product/:id" element={<ProductPage />} />
+         <Route path="/subscribe" element={<Subscribe></Subscribe>} />
     </Routes>
     </div>
   );

@@ -34,6 +34,8 @@ export default function AuthPage() {
       if (data.token) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("email", data.email || formData.email);
+        localStorage.setItem("id", data.id);
+        localStorage.setItem("role", data.role);
         showToast(`${isLogin ? "Login" : "Signup"} successful! 🎉`);
         setTimeout(() => window.location.href = "/", 1500);
       }

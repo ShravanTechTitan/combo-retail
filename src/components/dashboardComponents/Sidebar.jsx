@@ -7,12 +7,15 @@ export default function Sidebar({ open, handleLogout }) {
   const menuItems = [
    
     {name:"Admin Dashbord", path:"/dashboard/adminDashboard", icon:<FaUsers />},
+    {name:"Admin Subscriptions", path:"/dashboard/AdminSubscriptions", icon:<FaUsers />},
+   
     { name: "Subscriptions", path: "/dashboard/subscriptions", icon: <FaFileAlt /> },
     { name: "Device Categories", path: "/dashboard/deviceCategories", icon: <FaFileAlt /> },
     { name: "Part Categories", path: "/dashboard/PartCategories", icon: <FaFileAlt /> },
     { name: "Products", path: "/dashboard/Products", icon: <FaFileAlt /> },
     { name: "Model", path: "/dashboard/ModelPage", icon: <FaFileAlt /> },
     { name: "Brand", path: "/dashboard/BrandPage", icon: <FaFileAlt /> },
+
 ];
 
   return (

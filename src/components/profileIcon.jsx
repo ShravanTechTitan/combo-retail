@@ -2,8 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { FiLogIn } from "react-icons/fi";
-import { MdDashboard } from "react-icons/md";
-
+import { MdDashboard, MdSubscriptions } from "react-icons/md";
 
 export default function ProfileIcon() {
   const [darkMode, setDarkMode] = useState(
@@ -11,44 +10,41 @@ export default function ProfileIcon() {
   );
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"))
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+
   const token = localStorage.getItem("token");
-const initialRole = token ? parseJwt(token)?.role : null;
-const [userRole, setUserRole] = useState(initialRole);
+  const initialRole = token ? parseJwt(token)?.role : null;
+  const [userRole, setUserRole] = useState(initialRole);
 
   const navigate = useNavigate();
 
-
-  // Decode JWT payload (base64) safely
-function parseJwt(token) {
-  try {
-    const base64Payload = token.split(".")[1];
-    const payload = atob(base64Payload);
-    return JSON.parse(payload);
-  } catch (e) {
-    console.error("JWT parse failed", e);
-    return null;
-  }
-}
-
-// Get user role from JWT
-useEffect(() => {
-  if (isLoggedIn && !userRole) {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const decoded = parseJwt(token);
-      console.log("Decoded JWT:", decoded); // ✅ Add this line to see payload
-      if (decoded?.role) {
-        setUserRole(decoded.role);
-        console.log("User Role:", decoded.role); // ✅ Print role specifically
-      }
+  // Decode JWT payload safely
+  function parseJwt(token) {
+    try {
+      const base64Payload = token.split(".")[1];
+      const payload = atob(base64Payload);
+      return JSON.parse(payload);
+    } catch (e) {
+      console.error("JWT parse failed", e);
+      return null;
     }
   }
-}, [isLoggedIn, userRole]);
 
-
-
+  // Get user role from JWT
+  useEffect(() => {
+    if (isLoggedIn && !userRole) {
+      const token = localStorage.getItem("token");
+      if (token) {
+        const decoded = parseJwt(token);
+        console.log("Decoded JWT:", decoded);
+        if (decoded?.role) {
+          setUserRole(decoded.role);
+          console.log("User Role:", decoded.role);
+        }
+      }
+    }
+  }, [isLoggedIn, userRole]);
 
   // Handle theme
   useEffect(() => {
@@ -110,7 +106,7 @@ useEffect(() => {
                 <FiLogIn className="text-red-500" /> Logout
               </button>
 
-              {/* Only show Dashboard link if admin or superadmin */}
+              {/* Dashboard link for admin/superadmin */}
               {(userRole === "admin" || userRole === "superadmin") && (
                 <Link
                   to="/dashboard"
@@ -119,6 +115,14 @@ useEffect(() => {
                   <MdDashboard className="text-green-500" /> Dashboard
                 </Link>
               )}
+
+              {/* Subscribe button for all logged-in users */}
+              <Link
+                to="/subscribe"
+                className="flex items-center gap-2 px-3 py-2 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+              >
+                <MdSubscriptions className="text-purple-500" /> Subscribe
+              </Link>
             </>
           )}
         </div>
