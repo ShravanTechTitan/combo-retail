@@ -52,8 +52,8 @@ export default function Home() {
         </div>
 
         {/* Hero Heading Below Search */}
-        <h1 className="relative z-10 text-xl sm:text-lg md:text-4xl font-bold text-gray-900 dark:text-white mt-6 text-center">
-          Repair On Mobile – Choose Your Brand
+        <h1 className="relative z-10 text-xl sm:text-lg md:text-3xl font-bold text-gray-900 dark:text-white mt-6 text-center">
+          Helpful for mobile technicians, shop owners, and staff
         </h1>
       </div>
 

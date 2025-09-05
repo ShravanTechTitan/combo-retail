@@ -18,7 +18,7 @@ const hideProfileIcon = location.pathname === "/login"
 
   return(
     <header className="h-16 flex justify-between items-center bg-indigo-600 dark:bg-gray-800 px-6 shadow">
-        <h1 className="text-xl sm:text-2xl font-bold text-white"><span className="cursor-pointer" onClick={HandleClickLogo}>📱 </span  > <span>Combo Retail</span></h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-white"><span className="cursor-pointer" onClick={HandleClickLogo}>📱 </span  > <span>Universal Combo</span></h1>
            {!hideProfileIcon && <ProfileIcon></ProfileIcon>}
     </header>
   )

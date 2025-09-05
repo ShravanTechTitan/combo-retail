@@ -89,7 +89,7 @@ export default function PartDetails() {
         key={p._id}
         className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow hover:shadow-lg transition"
       >
-        <h3 className="text-lg font-semibold dark:text-white">{p.name}</h3>
+        <h3 className="text-lg font-semibold dark:text-white">{p.name} {p.modelIds[0]?.name}</h3>
         <p className="text-sm text-gray-500 mt-3 dark:text-gray-400">
           <span className="font-semibold">Supported Models:</span>{" "}
           {p.modelIds.map((m) => m.name).join(", ")}

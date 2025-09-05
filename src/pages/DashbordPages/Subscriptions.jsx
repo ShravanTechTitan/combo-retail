@@ -239,6 +239,7 @@ export default function Subscriptions() {
                   onChange={handleChange}
                   className="w-full px-3 py-2 rounded-lg border dark:bg-gray-700 dark:text-white"
                 >
+                  <option value="testing">Testing</option>
                   <option value="perMonth">Per Month</option>
                   <option value="sixMonths">6 Months</option>
                   <option value="perYear">Per Year</option>
