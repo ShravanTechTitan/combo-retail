@@ -33,31 +33,25 @@ export default function Home() {
       <Header />
 
       {/* Hero Section */}
-      <div className="relative w-full h-56 flex flex-col items-center justify-center">
-        <img
-          src="https://www.shutterstock.com/image-photo/technician-repairing-smartphones-motherboard-lab-260nw-2225064955.jpg"
-          alt="Repair on Mobile"
-          className="absolute inset-0 w-full h-full object-cover opacity-30"
-        />
+      <div className="flex flex-col items-center justify-center h-56">
+        {/* Hero Heading */}
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white text-center mb-6">
+          Helpful for mobile technicians, shop owners, and staff
+        </h1>
 
-        {/* Search Bar on Top */}
-        <div className="relative z-10 w-full max-w-md px-4">
+        {/* Search Bar */}
+        <div className="w-full max-w-md px-4">
           <SearchBar
             search={search}
             setSearch={setSearch}
             endpoint="/api/products/search"
             linkBuilder={(item) => `/product/${item._id}`}
-            type={"product"}
+            type={"models"}
           />
         </div>
-
-        {/* Hero Heading Below Search */}
-        <h1 className="relative z-10 text-xl sm:text-lg md:text-3xl font-bold text-gray-900 dark:text-white mt-6 text-center">
-          Helpful for mobile technicians, shop owners, and staff
-        </h1>
       </div>
 
-      {/* Brands / Spinner */}
+      {/* Brands Section */}
       {loading ? (
         <div className="flex justify-center items-center h-64 mt-6">
           <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>

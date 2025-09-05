@@ -65,7 +65,7 @@ export default function PartDetails() {
 
       <div className="p-6">
         <h1 className="pt-6 text-2xl font-bold dark:text-white mb-6 capitalize">
-          {brand} {category?.name} Parts
+          {brand} Universal {category?.name} Parts
         </h1>
 
         {/* Error */}

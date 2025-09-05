@@ -71,7 +71,7 @@ export default function ModelDetails() {
       <div className="p-6">
         {/* Page Title */}
         <h1 className="text-3xl font-bold dark:text-white mb-6 capitalize">
-          {brand} Spare Parts
+          {brand} Universal Spare Parts
         </h1>
 
         {/* Error Message */}
