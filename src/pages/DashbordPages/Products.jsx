@@ -18,6 +18,7 @@ export default function ProductManager() {
     name: "",
     price: "",
     description: "",
+    tags: [], // ✅ added
   };
 
   const [form, setForm] = useState(initialForm);
@@ -102,6 +103,11 @@ export default function ProductManager() {
   // Handlers
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
+  const handleTagsChange = (e) => {
+    const value = e.target.value;
+    setForm({ ...form, tags: value.split(",").map((tag) => tag.trim()).filter(Boolean) });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
@@ -113,6 +119,7 @@ export default function ProductManager() {
       brandIds: form.brand.map((b) => b.value) || [],
       price: Number(form.price),
       description: form.description,
+      tags: form.tags, // ✅ send tags
     };
 
     try {
@@ -142,6 +149,7 @@ export default function ProductManager() {
       name: product.name || "",
       price: product.price || "",
       description: product.description || "",
+      tags: product.tags || [], // ✅ load tags
     });
     setEditingId(product._id);
     setShowForm(true);
@@ -195,6 +203,7 @@ export default function ProductManager() {
                 <th className="p-2 text-left text-sm">Category</th>
                 <th className="p-2 text-left text-sm">Model</th>
                 <th className="p-2 text-left text-sm">Price</th>
+                <th className="p-2 text-left text-sm">Tags</th> {/* ✅ new */}
                 <th className="p-2 text-sm text-center">Actions</th>
               </tr>
             </thead>
@@ -217,6 +226,7 @@ export default function ProductManager() {
                     <td className="p-2 text-sm">{p.partCategoryId.name}</td>
                     <td className="p-2 text-sm">{p.modelIds.map((m) => m.name).join(", ")}</td>
                     <td className="p-2 text-sm">₹{p.price}</td>
+                    <td className="p-2 text-sm">{p.tags?.join(", ")}</td> {/* ✅ show tags */}
                     <td className="p-2 flex gap-2 justify-center">
                       <button
                         onClick={() => handleEdit(p._id)}
@@ -303,7 +313,7 @@ export default function ProductManager() {
                 />
               </div>
 
-              {/* Price */}
+              {/* Price + ID */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <input
                   type="text"
@@ -323,6 +333,50 @@ export default function ProductManager() {
                 />
               </div>
 
+              {/* Tags */}
+             {/* Tags */}
+<div>
+  <label className="block mb-2">Tags</label>
+  <div className="flex flex-wrap gap-2 p-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg">
+    {form.tags.map((tag, index) => (
+      <span
+        key={index}
+        className="px-2 py-1 bg-indigo-200 text-indigo-800 rounded-full text-xs flex items-center gap-1"
+      >
+        {tag}
+        <button
+          type="button"
+          onClick={() =>
+            setForm((prev) => ({
+              ...prev,
+              tags: prev.tags.filter((_, i) => i !== index),
+            }))
+          }
+          className="ml-1 text-indigo-600 hover:text-red-500"
+        >
+          ✕
+        </button>
+      </span>
+    ))}
+    <input
+      type="text"
+      placeholder="Type & press comma"
+      onKeyDown={(e) => {
+        if (e.key === "," && e.target.value.trim() !== "") {
+          e.preventDefault(); // ⛔ stop comma from typing
+          const newTag = e.target.value.trim().replace(/,$/, ""); // remove trailing comma
+          if (!form.tags.includes(newTag)) {
+            setForm((prev) => ({ ...prev, tags: [...prev.tags, newTag] }));
+          }
+          e.target.value = "";
+        }
+      }}
+      className="flex-grow bg-transparent outline-none p-1 text-sm"
+    />
+  </div>
+</div>
+
+
               {/* Description */}
               <div>
                 <label className="block mb-2">Description</label>
@@ -340,9 +394,9 @@ export default function ProductManager() {
               <div className="flex justify-end gap-4 sticky bottom-0 bg-white dark:bg-gray-900 py-4">
                 <button
                   type="button"
-                  onClick={() =>{ 
-                    setShowForm(false)
-                    setForm(initialForm)
+                  onClick={() => {
+                    setShowForm(false);
+                    setForm(initialForm);
                   }}
                   className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors"
                   disabled={submitting}
