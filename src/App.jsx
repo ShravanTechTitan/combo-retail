@@ -27,6 +27,15 @@ import Contact from "./pages/userpages/Contact.jsx";
 
 function App() {
 
+  useEffect(() => {
+  const darkMode = localStorage.getItem("theme") === "dark";
+  if (darkMode) {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+}, []);
+
 
   const [user, setUser] = useState(null);
   useEffect(() => {
@@ -44,7 +53,7 @@ function App() {
   }, []);
 
   return (
-     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
     <Routes>
       <Route path="/" element={<Home />} />
          <Route path="/login" element={<Login />} />

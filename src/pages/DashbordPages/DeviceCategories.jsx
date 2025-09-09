@@ -98,7 +98,7 @@ export default function DeviceCategoryPage() {
         <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
           <table className="w-full text-xs md:text-sm">
             <thead>
-              <tr className="bg-gray-100 dark:bg-gray-800">
+              <tr className=" text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800">
                 <th className="px-3 py-2 text-left">Name</th>
                 <th className="px-3 py-2 text-left">Description</th>
                 <th className="px-3 py-2 text-center">Actions</th>
@@ -108,7 +108,7 @@ export default function DeviceCategoryPage() {
               {deviceCategories.map((c) => (
                 <tr
                   key={c._id}
-                  className="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                  className="border-t  text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
                 >
                   <td className="px-3 py-2">{c.name}</td>
                   <td className="px-3 py-2">{c.description}</td>

@@ -175,7 +175,7 @@ export default function ProductManager() {
   };
 
   return (
-    <div className="p-6 bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 min-h-screen transition-colors">
+    <div className="p-6  text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 min-h-screen transition-colors">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">📦 Product Manager</h2>
@@ -190,13 +190,14 @@ export default function ProductManager() {
       {/* Table */}
       {loadingData ? (
         <div className="flex justify-center items-center h-64">
+          
           <div className="w-12 h-12 border-4 border-green-500 border-dashed rounded-full animate-spin"></div>
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-gray-200 dark:bg-gray-800">
+              <tr className="bg-gray-200  text-gray-700 dark:text-gray-200 dark:bg-gray-800">
                 <th className="p-2 text-left text-sm">ID</th>
                 <th className="p-2 text-left text-sm">Name</th>
                 <th className="p-2 text-left text-sm">Brand</th>
@@ -210,7 +211,7 @@ export default function ProductManager() {
             <tbody>
               {products.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="text-center p-4 text-gray-500 dark:text-gray-400 italic">
+                  <td colSpan={10} className="text-center p-4 text-gray-500 dark:text-white italic">
                     No products added yet.
                   </td>
                 </tr>
@@ -218,7 +219,7 @@ export default function ProductManager() {
                 products.map((p) => (
                   <tr
                     key={p._id}
-                    className="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    className="border-b border-gray-300  text-gray-700 dark:text-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                   >
                     <td className="p-2 text-sm">{p._id}</td>
                     <td className="p-2 text-sm">{p.name}</td>
@@ -341,7 +342,7 @@ export default function ProductManager() {
     {form.tags.map((tag, index) => (
       <span
         key={index}
-        className="px-2 py-1 bg-indigo-200 text-indigo-800 rounded-full text-xs flex items-center gap-1"
+        className="px-2 py-1 bg-indigo-200 text-indigo-800 dark:text-white rounded-full text-xs flex items-center gap-1"
       >
         {tag}
         <button

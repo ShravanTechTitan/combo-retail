@@ -17,9 +17,10 @@ export default function DashboardLayout() {
       <Sidebar open={open} handleLogout={handleLogout} />
       <div className="flex flex-col flex-1">
         <DashboardHeader open={open} setOpen={setOpen} />
-        <main className="p-4 md:p-6 flex-1 overflow-auto text-gray-800 dark:text-gray-200">
+        <main className="p-4 md:p-6 flex-1 overflow-auto text-gray-900 Dark:text-white">
           <Outlet />
         </main>
+
       </div>
     </div>
   );

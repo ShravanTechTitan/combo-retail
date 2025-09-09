@@ -25,10 +25,12 @@ export default function SearchBar({ search, setSearch, type }) {
         setLoading(false);
       }
     };
+    
 
     const delay = setTimeout(fetchSuggestions, 300); // debounce
     return () => clearTimeout(delay);
   }, [search, type]);
+
 
   return (
     <div className="relative w-72 sm:w-96">
@@ -62,8 +64,8 @@ export default function SearchBar({ search, setSearch, type }) {
               </div>
               {suggestions.map((item) => (
                 <Link
-                  key={`${item.productId}-${item.modelId || "single"}`}
-                  to={`/${type}/${item.productId}?model=${item.modelId || ""}`}
+                 key={`${item.productId}-${item.modelId || "single"}- ${item.label}`}
+                  to={`/product/${item.productId}`}
                   className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600"
                 >
                   {item.label}

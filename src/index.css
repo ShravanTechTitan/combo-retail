@@ -1,6 +1,18 @@
 @import "tailwindcss";
 
 :root {
+  --text-color: #1f2937; /* gray-800 */
+}
+
+.dark {
+  --text-color: #ffffff;
+}
+
+body {
+  color: var(--text-color);
+}
+
+:root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;

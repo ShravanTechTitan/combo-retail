@@ -113,7 +113,7 @@ export default function BrandPage() {
           <div className="w-10 h-10 border-4 border-green-500 border-dashed rounded-full animate-spin"></div>
         </div>
       ) : (
-        <table className="w-full text-left border border-gray-700 rounded-lg">
+        <table className="w-full  text-gray-700 dark:text-gray-200 text-left border border-gray-700 rounded-lg">
           <thead className="bg-gray-200 dark:bg-gray-800">
             <tr>
               <th className="p-2">Name</th>
@@ -124,7 +124,7 @@ export default function BrandPage() {
           </thead>
           <tbody>
             {brands.map((b) => (
-              <tr key={b._id} className="border-t border-gray-700">
+              <tr key={b._id} className="border-t  text-gray-700 dark:text-gray-200 border-gray-700">
                 <td className="p-2">{b.name}</td>
                 <td className="p-2">{b.country}</td>
                 <td className="p-2">{b.deviceCategoryId?.name}</td>

@@ -138,7 +138,7 @@ export default function Subscriptions() {
               {plans.map((plan) => (
                 <tr
                   key={plan._id}
-                  className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                  className="border-b dark:border-gray-700  text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
                 >
                   <td className="py-3 px-4">{plan.name}</td>
                   <td className="py-3 px-4">

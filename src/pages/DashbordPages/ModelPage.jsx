@@ -129,7 +129,7 @@ export default function ModelPage() {
           </thead>
           <tbody>
             {models.map((m) => (
-              <tr key={m._id} className="border-t border-gray-300 dark:border-gray-700">
+              <tr key={m._id} className="border-t border-gray-300  text-gray-700 dark:text-gray-200 dark:border-gray-700">
                 <td className="p-2">{m.name}</td>
                 <td className="p-2">{m.brandId?.name}</td>
                 <td className="p-2">{m.series}</td>
