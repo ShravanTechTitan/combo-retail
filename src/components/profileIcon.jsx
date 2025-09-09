@@ -87,49 +87,50 @@ export default function ProfileIcon() {
 
       {/* Dropdown */}
       {menuOpen && (
-        <div className="absolute right-0 top-12 w-52 bg-white dark:bg-gray-700 shadow-lg rounded-xl overflow-hidden text-sm z-50">
-          {!isLoggedIn ? (
-            <Link
-              to="/login"
-              className="flex items-center gap-2 px-3 py-2 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition"
-            >
-              <FiLogIn className="text-blue-500" /> Login
-            </Link>
-          ) : (
-            <>
-              <button
-                onClick={() => setShowLogoutPopup(true)}
-                className="flex items-center gap-2 w-full text-left px-3 py-2 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition"
-              >
-                <FiLogIn className="text-red-500" /> Logout
-              </button>
+       <div className="absolute right-0 top-12 w-52 bg-white dark:bg-gray-700 shadow-lg rounded-xl overflow-hidden text-sm z-50">
+  {!isLoggedIn ? (
+    <Link
+      to="/login"
+      className="flex items-center gap-2 px-3 py-2 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+    >
+      <FiLogIn className="text-blue-500" /> Login
+    </Link>
+  ) : (
+    <>
+      <button
+        onClick={() => setShowLogoutPopup(true)}
+        className="flex items-center gap-2 w-full text-left px-3 py-2 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+      >
+        <FiLogIn className="text-red-500" /> Logout
+      </button>
 
-              {(userRole === "admin" || userRole === "superadmin") && (
-                <Link
-                  to="/dashboard"
-                  className="flex items-center gap-2 px-3 py-2 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition"
-                >
-                  <MdDashboard className="text-green-500" /> Dashboard
-                </Link>
-              )}
+      {(userRole === "admin" || userRole === "superadmin") && (
+        <Link
+          to="/dashboard"
+          className="flex items-center gap-2 px-3 py-2 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+        >
+          <MdDashboard className="text-green-500" /> Dashboard
+        </Link>
+      )}
+    </>
+  )}
 
-              <Link
-                to="/subscribe"
-                className="flex items-center gap-2 px-3 py-2 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition"
-              >
-                <MdSubscriptions className="text-purple-500" /> Subscribe
-              </Link>
-              
-              {/* ✅ Contact Us inside dropdown */}
-              <Link
-                to="/contact"
-                className="flex items-center gap-2 px-3 py-2 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition"
-              >
-                <MdSubscriptions className="text-indigo-500" /> Contact Us
-              </Link>
-            </>
-          )}
-        </div>
+  {/* ✅ Always visible links */}
+  <Link
+    to="/subscribe"
+    className="flex items-center gap-2 px-3 py-2 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+  >
+    <MdSubscriptions className="text-purple-500" /> Subscribe
+  </Link>
+
+  <Link
+    to="/contact"
+    className="flex items-center gap-2 px-3 py-2 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+  >
+    <MdSubscriptions className="text-indigo-500" /> Contact Us
+  </Link>
+</div>
+
       )}
 
       {/* Logout Confirmation Modal */}
