@@ -1,36 +1,32 @@
-import ProfileIcon from "./profileIcon";
-import { Link ,useNavigate,useLocation } from "react-router-dom";
- 
+import SidebarMenu from "../components/userComponents/SideBar"; // ✅ Sidebar
+import { useNavigate } from "react-router-dom";
 
+export default function Header() {
+  const navigate = useNavigate();
 
+  const HandleClickLogo = () => {
+    navigate("/");
+  };
 
-export default function Header(){
+  return (
+    <header className="h-16 flex justify-between items-center bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-gray-900 dark:to-gray-800 px-6 shadow-lg relative">
+      {/* 🔹 Logo + Title */}
+      <div
+        className="flex items-center gap-2 cursor-pointer select-none"
+        onClick={HandleClickLogo}
+      >
+        <img
+          src="/UniversalCombo.jpg"
+          alt="Universal Combo Logo"
+          className="h-10 w-10 rounded-full shadow-md border-2 border-white"
+        />
+        <h1 className="text-xl sm:text-2xl font-bold text-white tracking-wide">
+          Universal Combo
+        </h1>
+      </div>
 
-  const location = useLocation(); 
-  const navigate = useNavigate()
-
-
-const HandleClickLogo = ()=>{
-  navigate("/")
-
-}
-const hideProfileIcon = location.pathname === "/login"
-
-  return(
-   <header className="h-16 flex justify-between items-center bg-indigo-600 dark:bg-gray-800 px-6 shadow">
-  {/* Logo + Title */}
-  <div className="flex items-center gap-2 cursor-pointer" onClick={HandleClickLogo}>
-    <img
-      src="/UniversalCombo.jpg"
-      alt="Universal Combo Logo"
-      className="h-10 w-10 rounded-full"
-    />
-    <h1 className="text-xl sm:text-2xl font-bold text-white">Universal Combo</h1>
-  </div>
-
-  {/* Profile Icon */}
-  {!hideProfileIcon && <ProfileIcon />}
-</header>
-
-  )
+      {/* 🔹 Sidebar Toggle Button */}
+      <SidebarMenu />
+    </header>
+  );
 }
