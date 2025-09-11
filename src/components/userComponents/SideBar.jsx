@@ -42,6 +42,7 @@ export default function SidebarMenu() {
       const token = localStorage.getItem("token");
       if (token) {
         const decoded = parseJwt(token);
+       
         if (decoded?.role) setUserRole(decoded.role);
         if (decoded?.name) setUserName(decoded.name); // assuming JWT has a 'name' field
       }
@@ -160,7 +161,7 @@ export default function SidebarMenu() {
                     <MdDashboard className="text-green-400" /> Dashboard
                   </Link>
                 )}
-            
+
                 <button
                   onClick={() => setShowLogoutPopup(true)}
                   className={menuItemClass + " w-full text-left"}
