@@ -1,0 +1,34 @@
+.brand-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.brand-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  border: 2px solid #3b82f6; /* border color */
+  border-left-color: transparent;   /* start invisible side */
+  border-bottom-color: transparent;
+  border-top-color: transparent;
+  border-right-color: transparent;      /* start showing right side */
+  transform: rotate(0deg);
+  transform-origin: center;
+  transition: transform 1.2s linear; /* slower animation */
+  pointer-events: none;
+  z-index: 1;
+}
+
+.brand-card:hover::before {
+  animation: drawBorder 1.5s linear forwards;
+}
+
+@keyframes drawBorder {
+  0%   { transform: rotate(0deg); }
+  25%  { border-top-color: #3b82f6; border-left-color: transparent; }
+  50%  { border-left-color: #3b82f6; border-bottom-color: transparent; }
+  75%  { border-bottom-color: #3b82f6; border-right-color: transparent; }
+  100% { border-right-color: #3b82f6; border-bottom-color: #3b82f6; border-left-color: #3b82f6; border-top-color: #3b82f6; }
+}

@@ -5,7 +5,19 @@ module.exports = {
     "./public/index.html",
   ],
   theme: {
-    extend: {},
+    
+extend: {
+  keyframes: {
+    borderSpin: {
+      "0%": { "stroke-dashoffset": "1000" },
+      "100%": { "stroke-dashoffset": "0" },
+    },
+  },
+  animation: {
+    borderSpin: "borderSpin 1.5s linear forwards",
+  },
+}
+,
   },
   plugins: [],
 };

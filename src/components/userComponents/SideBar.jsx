@@ -82,7 +82,7 @@ export default function SidebarMenu() {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 right-0 h-full w-72 
+        className={`fixed top-0 right-0 h-full w-52 
         bg-[rgba(15,23,42,0.92)] backdrop-blur-md 
         text-white transform ${
           open ? "translate-x-0" : "translate-x-full"
