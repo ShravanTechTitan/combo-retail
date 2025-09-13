@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route, Router } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import DashboardLayout from "./pages/DashbordPages/DashboardLayout.jsx";
 import Combos from "./pages/DashbordPages/Combos.jsx";
@@ -10,7 +10,6 @@ import {jwtDecode} from "jwt-decode";
 import ModelPage from "./pages/ModelPage.jsx";
 import DeviceCategories from "./pages/DashbordPages/DeviceCategories.jsx";
 import PartCategories from "./pages/DashbordPages/PartCategories.jsx";
-
 import Products from "./pages/DashbordPages/Products.jsx";
 import BrandPage from "./pages/DashbordPages/BrandPage.jsx";
 import Model from "./pages/DashbordPages/ModelPage.jsx";
