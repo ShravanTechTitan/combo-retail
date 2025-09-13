@@ -1,4 +1,4 @@
-import { Routes, Route, Router } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import DashboardLayout from "./pages/DashbordPages/DashboardLayout.jsx";
 import Combos from "./pages/DashbordPages/Combos.jsx";
@@ -21,6 +21,7 @@ import AdminDashboard from "./pages/DashbordPages/AdminDashboard.jsx";
 import Subscribe from "./pages/userpages/Subscribe.jsx";
 import AdminSubscriptions from "./pages/DashbordPages/AdminSubscriptions.jsx";
 import Contact from "./pages/userpages/Contact.jsx";
+import UserProfile from "./pages/userpages/Profile.jsx";
 
 // App.jsx
 
@@ -75,6 +76,7 @@ function App() {
         <Route path="/models/:brand/:brandId/:partCategoryName/:partCategoryId" element={<PartDetails />} />
          <Route path="/product/:id" element={<ProductPage />} />
          <Route path="/subscribe" element={<Subscribe></Subscribe>} />
+         <Route path="/profile" element={<UserProfile></UserProfile>}/>
     </Routes>
     </div>
   );
