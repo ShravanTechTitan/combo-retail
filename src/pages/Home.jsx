@@ -82,8 +82,7 @@ export default function Home() {
               </div>
 
               {/* Desktop Layout */}
-              <div className="flex flex-col items-center">
-
+              <div className="hidden sm:flex flex-col items-center">
                 <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg mb-2">
                   {m.name.charAt(0)}
                 </div>
