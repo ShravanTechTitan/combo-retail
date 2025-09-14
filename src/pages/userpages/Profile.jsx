@@ -10,7 +10,7 @@ export default function UserProfile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const data = await api.get();
+        const data = await api.get("/users/profile");
         setUser(data);
         setFormData(data);
       } catch (err) {
