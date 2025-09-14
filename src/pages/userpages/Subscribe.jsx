@@ -1,5 +1,5 @@
+// src/pages/Subscriptions/UserSubscriptions.jsx
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import api from "../../api/axiosConfig";
 
@@ -8,14 +8,12 @@ export default function UserSubscriptions() {
   const [userSubscriptions, setUserSubscriptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [subscribing, setSubscribing] = useState(null);
-  const navigate = useNavigate();
 
   const userId = localStorage.getItem("id");
-  console.log("userId :",userId)
-  console.log("Key:",import.meta.env.VITE_APP_RAZORPAY_KEY_ID);
+  console.log("User ID:", userId);
+  console.log("Razorpay Key:", import.meta.env.VITE_APP_RAZORPAY_KEY_ID);
 
-
-  // ✅ Fetch all plans
+  // Fetch all plans
   const fetchPlans = async () => {
     try {
       const res = await api.get("/subscriptions");
@@ -25,14 +23,14 @@ export default function UserSubscriptions() {
     }
   };
 
-  // ✅ Fetch user subscriptions
+  // Fetch user subscriptions
   const fetchUserSubscription = async () => {
     if (!userId) return;
     try {
       const res = await api.get(`/user-subscriptions/user/${userId}`);
       setUserSubscriptions(res.data || []);
     } catch (err) {
-      console.error("Error fetching user subscription:", err);
+      console.error("Error fetching user subscriptions:", err);
     }
   };
 
@@ -43,59 +41,7 @@ export default function UserSubscriptions() {
     );
   }, []);
 
-  const isLoggedIn = () => !!localStorage.getItem("token");
-
-  // ✅ Subscribe function
- const handleSubscribe = async (plan) => {
-  try {
-    setSubscribing(plan._id);
-
-    // Step 1: Create Razorpay order on your backend
-    console.log("Sending planId:", plan._id);
-    const { data } = await api.post("/payments/create-order", { planId: plan._id });
-    console.log("Order data:", data);
-
-
-    // Step 2: Prepare Razorpay options
-    const options = {
-      key: import.meta.env.VITE_APP_RAZORPAY_KEY_ID, 
-      amount: data.amount,
-      currency: data.currency,
-      name: "Universal Combo",
-      description: plan.name,
-      order_id: data.orderId,
-      handler: async function (response) {
-        // Step 3: Verify payment on backend
-        try {
-          await api.post("/payments/verify", {
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-            planId: plan._id,
-            userId: userId, // ✅ use the correct variable
-          });
-          alert("Payment Successful!");
-          fetchPlans();
-          fetchUserSubscription();
-        } catch (err) {
-          console.error("Verification failed:", err);
-          alert("Payment verification failed");
-        }
-      },
-      theme: { color: "#3399cc" },
-    };
-
-    // Step 4: Open Razorpay payment modal
-    const rzp = new window.Razorpay(options);
-    rzp.open();
-  } catch (err) {
-    console.error("Subscription error:", err);
-  } finally {
-    setSubscribing(null);
-  }
-};
-
-  // ✅ Plan duration format
+  // Format plan duration
   const formatDuration = (duration) => {
     switch (duration) {
       case "perMonth":
@@ -108,6 +54,66 @@ export default function UserSubscriptions() {
         return "18 Months";
       default:
         return "";
+    }
+  };
+
+  // Subscribe to a plan
+  const handleSubscribe = async (plan) => {
+    if (!userId) {
+      alert("Please login to subscribe!");
+      return;
+    }
+
+    try {
+      setSubscribing(plan._id);
+
+      console.log("Creating order for planId:", plan._id);
+
+      // ✅ Step 1: Create order in backend
+      const { data } = await api.post("/payments/create-order", {
+        planId: plan._id,
+      });
+
+      console.log("Order created:", data);
+
+      // ✅ Step 2: Razorpay options
+      const options = {
+        key: import.meta.env.VITE_APP_RAZORPAY_KEY_ID,
+        amount: data.amount,
+        currency: data.currency,
+        name: "Universal Combo",
+        description: plan.name,
+        order_id: data.orderId,
+        handler: async (response) => {
+          try {
+            // Step 3: Verify payment & activate subscription
+            await api.post("/payments/verify", {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              planId: plan._id,
+              userId,
+            });
+
+            alert("Payment Successful!");
+            fetchPlans();
+            fetchUserSubscription();
+          } catch (err) {
+            console.error("Payment verification failed:", err);
+            alert("Payment verification failed");
+          }
+        },
+        theme: { color: "#3399cc" },
+      };
+
+      // Step 4: Open Razorpay modal
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (err) {
+      console.error("Subscription error:", err);
+      alert("Something went wrong! Check console.");
+    } finally {
+      setSubscribing(null);
     }
   };
 
@@ -149,20 +155,6 @@ export default function UserSubscriptions() {
               </p>
               <p>Status: {sub.status}</p>
               <p>Expiry: {new Date(sub.endDate).toLocaleDateString()}</p>
-
-              {sub.status === "active" && (
-                <div className="mt-4 flex gap-3 justify-center">
-                  <button className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg">
-                    Cancel
-                  </button>
-                  <button
-                    onClick={() => setUserSubscriptions([])}
-                    className="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg"
-                  >
-                    Upgrade
-                  </button>
-                </div>
-              )}
             </div>
           ))}
         </div>
