@@ -80,7 +80,6 @@ export default function Home() {
                   View Spare Parts →
                 </span>
               </div>
-
               {/* Desktop Layout */}
               <div className="hidden sm:flex flex-col items-center">
                 <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg mb-2">

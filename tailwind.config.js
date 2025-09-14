@@ -1,5 +1,5 @@
 module.exports = {
-  darkMode: "media", // ⚡ use "class" since you toggle dark via localStorage in App.jsx
+  darkMode: "media", 
   content: [
     "./index.html",
     "./public/index.html",
@@ -7,6 +7,12 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    safelist: [
+      'sm:flex',
+      'sm:hidden',
+      'md:grid-cols-3',
+      'lg:grid-cols-5'
+    ],
   },
   plugins: [],
 };
