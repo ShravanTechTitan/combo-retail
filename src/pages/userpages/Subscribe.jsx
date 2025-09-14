@@ -3,16 +3,19 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import api from "../../api/axiosConfig";
 
-export default function Subscriptions() {
+export default function UserSubscriptions() {
   const [plans, setPlans] = useState([]);
-  const [userSubscriptions, setUserSubscriptions] = useState([]); // ✅ array
+  const [userSubscriptions, setUserSubscriptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [subscribing, setSubscribing] = useState(null);
   const navigate = useNavigate();
 
   const userId = localStorage.getItem("id");
+  console.log("userId :",userId)
+  console.log("Key:",import.meta.env.VITE_APP_RAZORPAY_KEY_ID);
 
-  // Fetch all plans
+
+  // ✅ Fetch all plans
   const fetchPlans = async () => {
     try {
       const res = await api.get("/subscriptions");
@@ -22,7 +25,7 @@ export default function Subscriptions() {
     }
   };
 
-  // Fetch user subscriptions
+  // ✅ Fetch user subscriptions
   const fetchUserSubscription = async () => {
     if (!userId) return;
     try {
@@ -42,25 +45,57 @@ export default function Subscriptions() {
 
   const isLoggedIn = () => !!localStorage.getItem("token");
 
-  // Subscribe flow
-  const handleSubscribe = async (planId) => {
-    if (!isLoggedIn()) {
-      navigate("/login");
-      return;
-    }
-    setSubscribing(planId);
-    try {
-      await api.post(`/user-subscriptions/${planId}/subscribe`, { userId });
-      alert("✅ Subscription successful!");
-      fetchUserSubscription();
-    } catch (err) {
-      console.error("Error subscribing:", err);
-      alert("❌ Subscription failed. Try again.");
-    } finally {
-      setSubscribing(null);
-    }
-  };
+  // ✅ Subscribe function
+ const handleSubscribe = async (plan) => {
+  try {
+    setSubscribing(plan._id);
 
+    // Step 1: Create Razorpay order on your backend
+    console.log("Sending planId:", plan._id);
+    const { data } = await api.post("/payments/create-order", { planId: plan._id });
+    console.log("Order data:", data);
+
+
+    // Step 2: Prepare Razorpay options
+    const options = {
+      key: import.meta.env.VITE_APP_RAZORPAY_KEY_ID, 
+      amount: data.amount,
+      currency: data.currency,
+      name: "Universal Combo",
+      description: plan.name,
+      order_id: data.orderId,
+      handler: async function (response) {
+        // Step 3: Verify payment on backend
+        try {
+          await api.post("/payments/verify", {
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            planId: plan._id,
+            userId: userId, // ✅ use the correct variable
+          });
+          alert("Payment Successful!");
+          fetchPlans();
+          fetchUserSubscription();
+        } catch (err) {
+          console.error("Verification failed:", err);
+          alert("Payment verification failed");
+        }
+      },
+      theme: { color: "#3399cc" },
+    };
+
+    // Step 4: Open Razorpay payment modal
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  } catch (err) {
+    console.error("Subscription error:", err);
+  } finally {
+    setSubscribing(null);
+  }
+};
+
+  // ✅ Plan duration format
   const formatDuration = (duration) => {
     switch (duration) {
       case "perMonth":
@@ -98,7 +133,6 @@ export default function Subscriptions() {
           <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
         </div>
       ) : userSubscriptions.length > 0 ? (
-        // ✅ Show user subscriptions
         <div className="max-w-2xl mx-auto grid gap-6">
           {userSubscriptions.map((sub) => (
             <div
@@ -122,7 +156,7 @@ export default function Subscriptions() {
                     Cancel
                   </button>
                   <button
-                    onClick={() => setUserSubscriptions([])} // 👈 show plans to upgrade
+                    onClick={() => setUserSubscriptions([])}
                     className="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg"
                   >
                     Upgrade
@@ -133,7 +167,6 @@ export default function Subscriptions() {
           ))}
         </div>
       ) : (
-        // ✅ Show available plans if no subscription
         <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
           {plans.map((plan) => (
             <div
@@ -155,7 +188,7 @@ export default function Subscriptions() {
                 </span>
               </div>
               <button
-                onClick={() => handleSubscribe(plan._id)}
+                onClick={() => handleSubscribe(plan)}
                 disabled={subscribing === plan._id}
                 className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg"
               >

@@ -1,5 +1,6 @@
-module.exports = {
-  darkMode: "media", 
+// tailwind.config.js
+export default {
+  darkMode: "media",
   content: [
     "./index.html",
     "./public/index.html",
@@ -8,10 +9,10 @@ module.exports = {
   theme: {
     extend: {},
     safelist: [
-      'sm:flex',
-      'sm:hidden',
-      'md:grid-cols-3',
-      'lg:grid-cols-5'
+      "sm:flex",
+      "sm:hidden",
+      "md:grid-cols-3",
+      "lg:grid-cols-5",
     ],
   },
   plugins: [],

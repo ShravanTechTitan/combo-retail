@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../../api/axiosConfig";
 import ConfirmDialog from "../../components/dashboardComponents/ConfirmDialog";
 
-export default function Subscriptions() {
+export default function AdminSubscriptions() {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +20,6 @@ export default function Subscriptions() {
   const [deleteId, setDeleteId] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
-  // Fetch all subscription plans
   const fetchPlans = async () => {
     setLoading(true);
     try {
@@ -37,7 +36,6 @@ export default function Subscriptions() {
     fetchPlans();
   }, []);
 
-  // Input handler
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setNewPlan((prev) => ({
@@ -46,7 +44,6 @@ export default function Subscriptions() {
     }));
   };
 
-  // Add or update plan
   const handleAddOrUpdatePlan = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -70,7 +67,6 @@ export default function Subscriptions() {
     }
   };
 
-  // Edit button
   const handleEdit = (plan) => {
     setEditingPlanId(plan._id);
     setNewPlan({
@@ -82,13 +78,11 @@ export default function Subscriptions() {
     setShowModal(true);
   };
 
-  // Delete button
   const handleDelete = (id) => {
     setDeleteId(id);
     setConfirmOpen(true);
   };
 
-  // Confirm delete
   const confirmDelete = async () => {
     setDeleting(true);
     try {
@@ -105,10 +99,9 @@ export default function Subscriptions() {
 
   return (
     <div className="p-6 relative">
-      {/* Page Title */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-          📝 Subscriptions
+          📝 Manage Subscriptions
         </h2>
         <button
           onClick={() => setShowModal(true)}
@@ -118,7 +111,6 @@ export default function Subscriptions() {
         </button>
       </div>
 
-      {/* Table */}
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
@@ -282,7 +274,6 @@ export default function Subscriptions() {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
       <ConfirmDialog
         isOpen={confirmOpen}
         title="Delete Plan"
