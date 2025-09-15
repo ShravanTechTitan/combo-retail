@@ -34,21 +34,24 @@ export default function Home() {
       <Header />
 
       {/* Hero Section */}
-      <div className="flex flex-col items-center justify-center h-56">
+      <div className="flex flex-col items-center justify-center h-76">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white text-center mb-6">
           Perfect Solution for Mobile Technicians, Shop Owners, and Staff
         </h1>
 
         {/* Search Bar */}
-        <div className="w-full max-w-md px-4">
-          <SearchBar
-            search={search}
-            setSearch={setSearch}
-            endpoint="/api/products/search"
-            linkBuilder={(item) => `/product/${item._id}`}
-            type={"models"}
-          />
-        </div>
+       <div className="w-full flex justify-center">
+  <div className="w-full max-w-md px-4">
+    <SearchBar
+      search={search}
+      setSearch={setSearch}
+      endpoint="/api/products/search"
+      linkBuilder={(item) => `/product/${item._id}`}
+      type={"models"}
+    />
+  </div>
+</div>
+
       </div>
 
       {/* Brands Section */}
