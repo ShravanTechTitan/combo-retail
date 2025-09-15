@@ -1,30 +1,17 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axiosConfig";
-import ConfirmDialog from "../../components/dashboardComponents/ConfirmDialog";
+import { formatDistanceToNow } from "date-fns";
 
-export default function AdminSubscriptions({ currentUserId }) {
-  const [plans, setPlans] = useState([]);
+export default function AdminSubscriptions() {
+  const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [processing, setProcessing] = useState(null); // track active operation
 
-  const [showModal, setShowModal] = useState(false);
-  const [newPlan, setNewPlan] = useState({
-    name: "",
-    price: "",
-    duration: "perMonth",
-    active: true,
-  });
-  const [saving, setSaving] = useState(false);
-  const [editingPlanId, setEditingPlanId] = useState(null);
-
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [deleteId, setDeleteId] = useState(null);
-  const [deleting, setDeleting] = useState(false);
-
-  const fetchPlans = async () => {
+  const fetchSubscriptions = async () => {
     setLoading(true);
     try {
-      const res = await api.get("/subscriptions");
-      setPlans(res.data);
+      const res = await api.get("/user-subscriptions/");
+      setSubscriptions(res.data);
     } catch (err) {
       console.error("Error fetching subscriptions:", err);
     } finally {
@@ -33,284 +20,120 @@ export default function AdminSubscriptions({ currentUserId }) {
   };
 
   useEffect(() => {
-    fetchPlans();
+    fetchSubscriptions();
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setNewPlan((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  const handleAddOrUpdatePlan = async (e) => {
-    e.preventDefault();
-    setSaving(true);
+  // ✅ Delete subscription
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this subscription?")) return;
+    setProcessing(id);
     try {
-      if (editingPlanId) {
-        const res = await api.put(`/subscriptions/${editingPlanId}`, newPlan);
-        setPlans((prev) =>
-          prev.map((plan) => (plan._id === editingPlanId ? res.data : plan))
-        );
-      } else {
-        const res = await api.post("/subscriptions", newPlan);
-        setPlans((prev) => [...prev, res.data]);
-      }
-      setShowModal(false);
-      setNewPlan({ name: "", price: "", duration: "perMonth", active: true });
-      setEditingPlanId(null);
+      await api.delete(`/user-subscriptions/${id}`);
+      setSubscriptions(subscriptions.filter((s) => s._id !== id));
     } catch (err) {
-      console.error("Error saving plan:", err);
+      console.error("Error deleting subscription:", err);
+      alert("❌ Failed to delete subscription");
     } finally {
-      setSaving(false);
+      setProcessing(null);
     }
   };
 
-  const handleEdit = (plan) => {
-    setEditingPlanId(plan._id);
-    setNewPlan({
-      name: plan.name,
-      price: plan.price,
-      duration: plan.duration || "perMonth",
-      active: plan.active,
-    });
-    setShowModal(true);
-  };
+  // 🚫 Mark as inactive
+const handleToggle = async (subId) => {
+  try {
+    await api.put(`/user-subscriptions/${subId}/toggle-status`);
+    // Refresh the list after toggling
+    fetchSubscriptions();
+  } catch (err) {
+    console.error("Error toggling status:", err);
+    alert("Failed to update status");
+  }
+};
 
-  const handleDelete = (id) => {
-    setDeleteId(id);
-    setConfirmOpen(true);
-  };
-
-  const confirmDelete = async () => {
-    setDeleting(true);
-    try {
-      await api.delete(`/subscriptions/${deleteId}`);
-      setPlans((prev) => prev.filter((plan) => plan._id !== deleteId));
-      setConfirmOpen(false);
-      setDeleteId(null);
-    } catch (err) {
-      console.error("Error deleting plan:", err);
-    } finally {
-      setDeleting(false);
-    }
-  };
-
-  // ✅ Razorpay subscription handler
-  const handleSubscribe = async (plan) => {
-    try {
-      const { data } = await api.post("/payments/create-order", { planId: plan._id });
-      const options = {
-        key: process.env.REACT_APP_RAZORPAY_KEY_ID,
-        amount: data.amount * 100,
-        currency: data.currency,
-        name: "Your App Name",
-        description: `Subscription: ${plan.name}`,
-        order_id: data.orderId,
-        handler: async function (response) {
-          await api.post("/payments/verify", {
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-            planId: plan._id,
-            userId: currentUserId,
-          });
-          alert("Subscription successful!");
-          fetchPlans();
-        },
-        theme: { color: "#3399cc" },
-      };
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (err) {
-      console.error("Subscription error:", err);
-      alert("Payment failed!");
-    }
-  };
 
   return (
-    <div className="p-6 relative">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-          📝 Manage Subscriptions
-        </h2>
-        <button
-          onClick={() => setShowModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
-        >
-          + Add New Plan
-        </button>
-      </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <div className="w-full py-8 px-4">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+          All User Subscriptions
+        </h1>
 
-      {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
-        </div>
-      ) : (
-        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
-          <table className="min-w-full bg-white dark:bg-gray-800 rounded-lg">
-            <thead>
-              <tr className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
-                <th className="py-3 px-4 text-left">Plan Name</th>
-                <th className="py-3 px-4 text-left">Price</th>
-                <th className="py-3 px-4 text-left">Status</th>
-                <th className="py-3 px-4 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {plans.map((plan) => (
-                <tr
-                  key={plan._id}
-                  className="border-b dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
-                >
-                  <td className="py-3 px-4">{plan.name}</td>
-                  <td className="py-3 px-4">
-                    ₹{plan.price} ({plan.duration})
-                  </td>
-                  <td className="py-3 px-4">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                        plan.active
-                          ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100"
-                          : "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100"
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+          </div>
+        ) : (
+          <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+            <table className="min-w-full bg-white dark:bg-gray-800">
+              <thead>
+                <tr className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+                  <th className="py-3 px-4 text-left">User</th>
+                  <th className="py-3 px-4 text-left">Email</th>
+                  <th className="py-3 px-4 text-left">Plan</th>
+                  <th className="py-3 px-4 text-left">Start Date</th>
+                  <th className="py-3 px-4 text-left">End Date</th>
+                  <th className="py-3 px-4 text-left">Time Left</th>
+                  <th className="py-3 px-4 text-left">Status</th>
+                  <th className="py-3 px-4 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {subscriptions.map((sub) => (
+                  <tr
+                    key={sub._id}
+                    className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                  >
+                    <td className="py-3 px-4">{sub.user?.name}</td>
+                    <td className="py-3 px-4">{sub.user?.email}</td>
+                    <td className="py-3 px-4">{sub.plan?.name}</td>
+                    <td className="py-3 px-4">{new Date(sub.startDate).toLocaleDateString()}</td>
+                    <td className="py-3 px-4">{new Date(sub.endDate).toLocaleDateString()}</td>
+                    <td className="py-3 px-4 text-blue-600 dark:text-blue-400 font-semibold">
+                      {formatDistanceToNow(new Date(sub.endDate), { addSuffix: true })}
+                    </td>
+                    <td
+                      className={`py-3 px-4 font-bold ${
+                        sub.status === "active"
+                          ? "text-green-600 dark:text-green-400"
+                          : "text-red-500 dark:text-red-400"
                       }`}
                     >
-                      {plan.active ? "Active" : "Inactive"}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 flex gap-2">
-                    <button
-                      onClick={() => handleEdit(plan)}
-                      className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-lg text-sm"
+                      {sub.status}
+                    </td>
+                    <td className="py-3 px-4 flex gap-2 justify-center">
+                      <button
+                        onClick={() => handleToggle(sub._id)}
+                        disabled={processing === sub._id}
+                        className="px-3 py-1 text-sm bg-yellow-500 hover:bg-yellow-600 text-white rounded"
+                      >
+                        {processing === sub._id ? "..." : "Inactive"}
+                      </button>
+                      <button
+                        onClick={() => handleDelete(sub._id)}
+                        disabled={processing === sub._id}
+                        className="px-3 py-1 text-sm bg-red-600 hover:bg-red-700 text-white rounded"
+                      >
+                        {processing === sub._id ? "..." : "Delete"}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+
+                {subscriptions.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={8}
+                      className="py-6 text-center text-gray-500 dark:text-gray-400"
                     >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(plan._id)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm"
-                    >
-                      Delete
-                    </button>
-                    <button
-                      onClick={() => handleSubscribe(plan)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm"
-                    >
-                      Subscribe
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {plans.length === 0 && (
-                <tr>
-                  <td colSpan={4} className="py-6 text-center text-gray-500 dark:text-gray-400">
-                    No subscription plans found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Add/Edit Modal */}
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div
-            className="absolute inset-0 bg-black opacity-50 backdrop-blur-sm"
-            onClick={() => {
-              setShowModal(false);
-              setEditingPlanId(null);
-            }}
-          />
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl z-10 w-full max-w-md">
-            <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-              {editingPlanId ? "Edit Plan" : "Add New Plan"}
-            </h3>
-            <form onSubmit={handleAddOrUpdatePlan} className="space-y-4">
-              <div>
-                <label className="block text-gray-700 dark:text-gray-200 mb-1">Plan Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={newPlan.name}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-3 py-2 rounded-lg border dark:bg-gray-700 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-gray-700 dark:text-gray-200 mb-1">Price (₹)</label>
-                <input
-                  type="number"
-                  name="price"
-                  value={newPlan.price}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-3 py-2 rounded-lg border dark:bg-gray-700 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-gray-700 dark:text-gray-200 mb-1">Duration</label>
-                <select
-                  name="duration"
-                  value={newPlan.duration}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 rounded-lg border dark:bg-gray-700 dark:text-white"
-                >
-                  <option value="testing">Testing</option>
-                  <option value="perMonth">Per Month</option>
-                  <option value="sixMonths">6 Months</option>
-                  <option value="perYear">Per Year</option>
-                  <option value="eighteenMonths">18 Months</option>
-                </select>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name="active"
-                  checked={newPlan.active}
-                  onChange={handleChange}
-                  className="w-4 h-4"
-                />
-                <label className="text-gray-700 dark:text-gray-200">Active</label>
-              </div>
-
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowModal(false);
-                    setEditingPlanId(null);
-                  }}
-                  className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
-                >
-                  {saving ? "Saving..." : editingPlanId ? "Update Plan" : "Add Plan"}
-                </button>
-              </div>
-            </form>
+                      No subscriptions found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
-        </div>
-      )}
-
-      <ConfirmDialog
-        isOpen={confirmOpen}
-        title="Delete Plan"
-        message="This action cannot be undone. Are you sure you want to delete this subscription plan?"
-        onCancel={() => setConfirmOpen(false)}
-        onConfirm={confirmDelete}
-        loading={deleting}
-      />
+        )}
+      </div>
     </div>
   );
 }

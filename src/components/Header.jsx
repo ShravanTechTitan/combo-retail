@@ -9,7 +9,7 @@ export default function Header() {
   };
 
   return (
-    <header className="h-16 flex justify-between items-center bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-gray-900 dark:to-gray-800 px-6 shadow-lg relative">
+    <header className="fixed top-0 left-0 w-full z-50 h-16 flex justify-between items-center bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-gray-900 dark:to-gray-800 px-6 shadow-lg">
       {/* 🔹 Logo + Title */}
       <div
         className="flex items-center gap-2 cursor-pointer select-none"
