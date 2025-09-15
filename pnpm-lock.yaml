@@ -42,11 +42,11 @@ importers:
         specifier: ^1.6.6
         version: 1.6.6
       sweetalert2:
-        specifier: ^11.22.5
-        version: 11.22.5
+        specifier: ^11.23.0
+        version: 11.23.0
       sweetalert2-react-content:
         specifier: ^5.1.0
-        version: 5.1.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sweetalert2@11.22.5)
+        version: 5.1.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sweetalert2@11.23.0)
     devDependencies:
       '@eslint/js':
         specifier: ^9.29.0
@@ -5894,8 +5894,8 @@ packages:
       react-dom: ^18.0.0 || ^19.0.0
       sweetalert2: ^11.0.0
 
-  sweetalert2@11.22.5:
-    resolution: {integrity: sha512-k9gb2M0n4b830FaWDmqaFQULIRvKixTbJOBkTN5KwRNIT8UxjGxusC9g67cj8sCxkJb9nVy2+PgyVd7vYK7cug==}
+  sweetalert2@11.23.0:
+    resolution: {integrity: sha512-cKzzbC3C1sIs7o9XAMw4E8F9kBtGXsBDUsd2JZ8JM/dqa+nzWwSGM+9LLYILZWzWHzX9W+HJNHyBlbHPVS/krw==}
 
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
@@ -13192,13 +13192,13 @@ snapshots:
       picocolors: 1.1.1
       stable: 0.1.8
 
-  sweetalert2-react-content@5.1.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sweetalert2@11.22.5):
+  sweetalert2-react-content@5.1.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sweetalert2@11.23.0):
     dependencies:
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
-      sweetalert2: 11.22.5
+      sweetalert2: 11.23.0
 
-  sweetalert2@11.22.5: {}
+  sweetalert2@11.23.0: {}
 
   symbol-tree@3.2.4: {}
 
