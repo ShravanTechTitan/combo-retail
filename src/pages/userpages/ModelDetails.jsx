@@ -58,7 +58,7 @@ export default function ModelDetails() {
       <Header />
 
       {/* Search Bar */}
-      <div className="flex justify-center pt-6">
+      <div className="flex justify-center pt-25">
         <FilterSearchBar
           items={partCategories}
           search={search}

@@ -53,7 +53,7 @@ export default function PartDetails() {
       <Header />
 
       {/* Search Bar */}
-      <div className="flex justify-center pt-4">
+      <div className="flex justify-center pt-25 ">
         <FilterSearchBar
           items={products}
           search={search}

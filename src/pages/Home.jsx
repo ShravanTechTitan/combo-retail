@@ -34,7 +34,7 @@ export default function Home() {
       <Header />
 
       {/* Hero Section */}
-      <div className="flex flex-col items-center justify-center h-76">
+      <div className="flex flex-col items-center justify-center pt-20 h-69">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white text-center mb-6">
           Perfect Solution for Mobile Technicians, Shop Owners, and Staff
         </h1>
@@ -56,11 +56,11 @@ export default function Home() {
 
       {/* Brands Section */}
       {loading ? (
-        <div className="flex justify-center items-center h-64 mt-6">
+        <div className="flex justify-center items-center h-64 mt-2">
           <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-4 mt-6">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-4 ">
           {brands.map((m) => (
             <div
               key={m._id}
