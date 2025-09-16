@@ -28,6 +28,8 @@ export default function Home() {
     fetchBrands();
   }, []);
 
+  
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Header */}
@@ -40,17 +42,18 @@ export default function Home() {
         </h1>
 
         {/* Search Bar */}
-       <div className="w-full flex justify-center">
-  <div className="w-full max-w-md px-4">
+      <div className="w-full px-4">
+  <div className="w-full max-w-md mx-auto">
     <SearchBar
       search={search}
       setSearch={setSearch}
       endpoint="/api/products/search"
       linkBuilder={(item) => `/product/${item._id}`}
-      type={"models"}
+      type="models"
     />
   </div>
 </div>
+
 
       </div>
 

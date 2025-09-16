@@ -44,8 +44,24 @@ export default function PartDetails() {
     }
   };
 
+   const checkExpiryAndLogout = (subs) => {
+    const allExpired = subs.every(
+      (sub) => new Date(sub.endDate) < new Date()
+    );
+
+    if (subs.length > 0 && allExpired) {
+      Swal.fire("Session Ended", "Your subscription has expired.", "info").then(
+        () => {
+          localStorage.clear();
+           
+        }
+      );
+    }
+  };
+
   useEffect(() => {
     fetchProducts();
+    checkExpiryAndLogout();
   }, [brand, brandId, partCategoryId]);
 
   return (

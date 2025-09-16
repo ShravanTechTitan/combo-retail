@@ -1,4 +1,3 @@
-// src/pages/Subscriptions/UserSubscriptions.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
@@ -14,7 +13,7 @@ export default function UserSubscriptions() {
   const userId = localStorage.getItem("id");
   const navigate = useNavigate();
 
-  // ✅ Active subs
+  // Active subs
   const activeSubscriptions = userSubscriptions.filter(
     (sub) => sub.status === "active"
   );
@@ -31,7 +30,7 @@ const availablePlans = plans.filter(
 );
 
 
-  // 📌 Check expiry + auto logout
+  // Check expiry + auto logout
   const checkExpiryAndLogout = (subs) => {
     const allExpired = subs.every(
       (sub) => new Date(sub.endDate) < new Date()
@@ -40,8 +39,8 @@ const availablePlans = plans.filter(
     if (subs.length > 0 && allExpired) {
       Swal.fire("Session Ended", "Your subscription has expired.", "info").then(
         () => {
-          localStorage.clear();
-          navigate("/logout"); // or navigate("/login")
+          // localStorage.clear();
+           
         }
       );
     }
@@ -183,24 +182,24 @@ const getExpiryTimeLeft = (endDate) => {
   };
 
   // 📌 Cancel subscription
-  const handleCancel = async (subId) => {
-    const confirm = await Swal.fire({
-      title: "Cancel Subscription?",
-      text: "You will lose all benefits immediately.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, Cancel it",
-    });
-    if (!confirm.isConfirmed) return;
+  // const handleCancel = async (subId) => {
+  //   const confirm = await Swal.fire({
+  //     title: "Cancel Subscription?",
+  //     text: "You will lose all benefits immediately.",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonText: "Yes, Cancel it",
+  //   });
+  //   if (!confirm.isConfirmed) return;
 
-    try {
-      await api.post(`/user-subscriptions/cancel/${subId}`);
-      Swal.fire("Cancelled", "Your subscription has been cancelled.", "info");
-      fetchUserSubscriptions();
-    } catch (err) {
-      Swal.fire("Error", "Failed to cancel subscription", "error");
-    }
-  };
+  //   try {
+  //     await api.post(`/user-subscriptions/cancel/${subId}`);
+  //     Swal.fire("Cancelled", "Your subscription has been cancelled.", "info");
+  //     fetchUserSubscriptions();
+  //   } catch (err) {
+  //     Swal.fire("Error", "Failed to cancel subscription", "error");
+  //   }
+  // };
 
   return (
 
@@ -339,7 +338,5 @@ const getExpiryTimeLeft = (endDate) => {
       </div>
     )}
   </div>
-
-
   );
 }
