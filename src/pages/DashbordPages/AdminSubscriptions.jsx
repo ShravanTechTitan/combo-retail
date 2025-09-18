@@ -12,6 +12,7 @@ export default function AdminSubscriptions() {
     try {
       const res = await api.get("/user-subscriptions/");
       setSubscriptions(res.data);
+      console.log(res.data)
     } catch (err) {
       console.error("Error fetching subscriptions:", err);
     } finally {

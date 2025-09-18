@@ -1,58 +1,117 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Title -->
-    <title>Universal Combo</title>
+    <title>Universal Combo - Knowledge Hub for Mobile Spare Parts</title>
 
-    <!-- Meta Description (Homepage ke liye) -->
-    <meta name="description" content="Universal Combo -Samsung, iPhone, vivo, moto, ">
+    <!-- Meta Description -->
+    <meta
+      name="description"
+      content="Universal Combo - Your knowledge hub for mobile spare parts. Learn about Samsung, iPhone, Vivo, Oppo, Realme, OnePlus, Mi, Poco spares, compatibility, quality checks, and repair insights."
+    />
 
-    <!-- Keywords (optional, Google itna use nahi karta) -->
-    <meta name="keywords" content="Universal Combo, Mobile Spare Parts, Samsung, iPhone, Accessories, Retail, Online Store">
+    <!-- Keywords (Informational SEO) -->
+    <meta
+      name="keywords"
+      content="Mobile spare parts knowledge, Samsung spares guide, iPhone repair info, Oppo Realme OnePlus spare compatibility, Mi Poco parts details, mobile repair knowledge, Universal Combo"
+    />
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/UniversalCombo.jpg" />
 
-    <!-- Open Graph (for WhatsApp, Facebook, etc.) -->
-    <meta property="og:title" content="Universal Combo - Mobile & Spare Parts" />
-    <meta property="og:description" content="Buy mobile phones, spare parts & accessories from Universal Combo." />
-    <meta property="og:image" content="https://universalcombo.com/UniversalCombo.jpg" />
+    <!-- Open Graph (Social Sharing Preview) -->
+    <meta property="og:title" content="Universal Combo - Knowledge on Mobile Spare Parts" />
+    <meta
+      property="og:description"
+      content="Get detailed knowledge about mobile spare parts: Samsung, Oppo, Vivo, Mi, iPhone & more. Universal Combo is your spare parts learning platform."
+    />
+    <meta
+      property="og:image"
+      content="https://universalcombo.com/UniversalCombo.jpg"
+    />
     <meta property="og:url" content="https://universalcombo.com/" />
     <meta property="og:type" content="website" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Universal Combo - Mobile & Spare Parts" />
-    <meta name="twitter:description" content="Best deals on mobiles and spare parts at Universal Combo." />
-    <meta name="twitter:image" content="https://universalcombo.com/UniversalCombo.jpg" />
+    <meta
+      name="twitter:title"
+      content="Universal Combo - Knowledge Hub for Mobile Spare Parts"
+    />
+    <meta
+      name="twitter:description"
+      content="Learn everything about mobile spare parts, repair tips, and genuine vs copy checks. Universal Combo is your guide to spare parts."
+    />
+    <meta
+      name="twitter:image"
+      content="https://universalcombo.com/UniversalCombo.jpg"
+    />
 
-    <!-- Canonical URL (duplicate content fix) -->
+    <!-- Canonical URL -->
     <link rel="canonical" href="https://universalcombo.com/" />
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Universal Combo",
-      "url": "https://universalcombo.com",
-      "logo": "https://universalcombo.com/UniversalCombo.jpg",
-      "sameAs": [
-        "https://facebook.com/yourpage",
-        "https://instagram.com/yourpage"
-      ]
-    }
-    </script>
 
     <!-- Sitemap -->
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
-  <link href="./src/output.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <link
+      rel="sitemap"
+      type="application/xml"
+      title="Sitemap"
+      href="/sitemap.xml"
+    />
 
+    <!-- Structured Data (Organization + Website + Article Hub) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Universal Combo",
+        "url": "https://universalcombo.com",
+        "logo": "https://universalcombo.com/UniversalCombo.jpg",
+        "sameAs": [
+          "https://facebook.com/yourpage",
+          "https://instagram.com/yourpage"
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "url": "https://universalcombo.com/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://universalcombo.com/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+
+    <!-- Tailwind CSS -->
+    <link href="./src/output.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-white text-gray-900">
+    <!-- Navigation -->
+    <header class="p-4 shadow">
+      <nav class="flex gap-6">
+        <a href="/" class="font-bold">Home</a>
+        <a href="/models/samsung/68b088796880b360b92f8969/combo/68b088556880b360b92f8962">Samsung Parts Guide</a>
+        <a href="/models/oppo-realme-one-plus/68b7d2e99339fd05f0a738fd/combo/68b088556880b360b92f8962">Oppo / Realme / OnePlus</a>
+        <a href="/models/vivo-iqoo/68b7d2fb9339fd05f0a73901">Vivo / iQOO</a>
+        <a href="/models/mi-poco/68b7d4cd9339fd05f0a7396e/combo/68b088556880b360b92f8962">Mi / Poco</a>
+        <a href="/subscribe">Subscribe</a>
+        <a href="/login">Login</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </header>
+
+    <!-- React App Mount -->
+    <main id="root"></main>
+
+    <!-- Scripts -->
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

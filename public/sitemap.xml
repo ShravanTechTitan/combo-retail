@@ -1,18 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Home -->
   <url>
     <loc>https://universalcombo.com/</loc>
     <lastmod>2025-09-09</lastmod>
     <priority>1.0</priority>
   </url>
+
+  <!-- Login -->
   <url>
     <loc>https://universalcombo.com/login</loc>
     <lastmod>2025-09-09</lastmod>
     <priority>0.8</priority>
   </url>
+
+  <!-- Subscribe -->
+  <url>
+    <loc>https://universalcombo.com/subscribe</loc>
+    <lastmod>2025-09-09</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Contact -->
   <url>
     <loc>https://universalcombo.com/contact</loc>
     <lastmod>2025-09-09</lastmod>
     <priority>0.5</priority>
+  </url>
+
+  <!-- Samsung -->
+  <url>
+    <loc>https://universalcombo.com/models/samsung/68b088796880b360b92f8969/combo/68b088556880b360b92f8962</loc>
+    <lastmod>2025-09-09</lastmod>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Oppo / Realme / OnePlus -->
+  <url>
+    <loc>https://universalcombo.com/models/oppo-realme-one-plus/68b7d2e99339fd05f0a738fd/combo/68b088556880b360b92f8962</loc>
+    <lastmod>2025-09-09</lastmod>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Vivo / iQOO -->
+  <url>
+    <loc>https://universalcombo.com/models/vivo-iqoo/68b7d2fb9339fd05f0a73901</loc>
+    <lastmod>2025-09-09</lastmod>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Mi / Poco -->
+  <url>
+    <loc>https://universalcombo.com/models/mi-poco/68b7d4cd9339fd05f0a7396e/combo/68b088556880b360b92f8962</loc>
+    <lastmod>2025-09-09</lastmod>
+    <priority>0.9</priority>
   </url>
 </urlset>

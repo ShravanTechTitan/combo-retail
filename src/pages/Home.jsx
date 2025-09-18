@@ -42,20 +42,18 @@ export default function Home() {
         </h1>
 
         {/* Search Bar */}
-      <div className="w-full px-4">
-  <div className="w-full max-w-md mx-auto">
-    <SearchBar
-      search={search}
-      setSearch={setSearch}
-      endpoint="/api/products/search"
-      linkBuilder={(item) => `/product/${item._id}`}
-      type="models"
-    />
-  </div>
-</div>
-
-
-      </div>
+        <div className="w-full px-4">
+          <div className="w-full max-w-md mx-auto">
+            <SearchBar
+              search={search}
+              setSearch={setSearch}
+              endpoint="/api/products/search"
+              linkBuilder={(item) => `/product/${item._id}`}
+              type="models"
+            />
+          </div>
+        </div>
+        </div>
 
       {/* Brands Section */}
       {loading ? (
