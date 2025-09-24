@@ -1,11 +1,9 @@
 import SidebarMenu from "../components/userComponents/SideBar"; 
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { Moon, Sun, Menu } from "lucide-react"; // ✅ Clean icons
+import { Menu } from "lucide-react";
 
 export default function Header() {
   const navigate = useNavigate();
- 
 
   const HandleClickLogo = () => {
     navigate("/");
@@ -14,8 +12,8 @@ export default function Header() {
   return (
     <header className="fixed top-0 left-0 w-full z-50 h-16 flex justify-between items-center 
                        bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-gray-900 dark:to-gray-800 
-                       px-6 shadow-lg transition-colors duration-300">
-      {/* 🔹 Logo + Brand */}
+                       px-4 sm:px-6 shadow-lg transition-colors duration-300">
+      {/* Logo + Brand */}
       <div
         className="flex items-center gap-2 cursor-pointer select-none"
         onClick={HandleClickLogo}
@@ -23,40 +21,36 @@ export default function Header() {
         <img
           src="/UniversalCombo.jpg"
           alt="Universal Combo Logo"
-          className="h-10 w-10 rounded-full shadow-md border-2 border-white"
+          className="h-8 w-8 sm:h-10 sm:w-10 rounded-full shadow-md border-2 border-white"
         />
-        <h1 className="text-xl sm:text-2xl font-bold tracking-wide">
+        <h1 className="text-lg sm:text-xl font-bold tracking-wide">
           <span className="text-blue-400">UNIVERSAL</span>
           <span className="text-orange-400">COMBO</span>
         </h1>
       </div>
 
-      <div className="flex items-center gap-3">
-  {/* ✅ Subscribe button */}
-  <button 
-    onClick={() => navigate("/subscribe")} 
-    className="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 
-               hidden sm:block"   // hide on very small screens
+      <div className="flex flex-row items-center gap-2 sm:gap-3">
+  {/* Full button on larger screens */}
+  <button
+    onClick={() => navigate("/subscribe")}
+    className="bg-green-600 text-white px-3 py-2 mr-10 sm:px-5 py-1 sm:py-2 rounded-lg hover:bg-green-700 hidden sm:block text-sm sm:text-base"
   >
     Subscribe Now
   </button>
 
-  {/* ✅ Compact icon for mobile */}
-  <button 
+  {/* Compact button on mobile */}
+  <button
     onClick={() => navigate("/subscribe")}
-    className="bg-green-600 text-white p-2 rounded-lg hover:bg-green-700 sm:hidden"
+    className="bg-green-600 text-white px-3 py-2 mr-10 rounded-lg hover:bg-green-700 sm:hidden text-xs"
   >
-    <span className="text-sm font-semibold">Subscribe</span>
+    Subscribe
   </button>
 
-  {/* ✅ Sidebar Menu */}
-  <div className="px-3">
-    <SidebarMenu>
-      <Menu className="text-white w-6 h-6" />
-    </SidebarMenu>
-  </div>
+  {/* Sidebar Menu */}
+  <SidebarMenu>
+    <Menu className="text-white w-6 h-6" />
+  </SidebarMenu>
 </div>
-
 
     </header>
   );
