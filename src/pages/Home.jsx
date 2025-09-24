@@ -16,9 +16,18 @@ export default function Home() {
     setLoading(true);
     try {
       const res = await api.get("/brands");
-      setBrands(res.data);
+      console.log("Brands API response:", res.data);
+      
+      // Ensure we always set an array
+      if (Array.isArray(res.data)) {
+        setBrands(res.data);
+      } else {
+        console.error("API response is not an array:", res.data);
+        setBrands([]);
+      }
     } catch (error) {
       console.error("Error fetching brands:", error);
+      setBrands([]); // Ensure brands is always an array
     } finally {
       setLoading(false);
     }
@@ -42,7 +51,7 @@ export default function Home() {
         </h1>
 
         {/* Search Bar */}
-        <div className="w-full px-4">
+        <div className="flex justify-center">
           <div className="w-full max-w-md mx-auto">
             <SearchBar
               search={search}
@@ -62,7 +71,7 @@ export default function Home() {
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-4 ">
-          {brands.map((m) => (
+          {Array.isArray(brands) && brands.map((m) => (
             <div
               key={m._id}
               onClick={() => {

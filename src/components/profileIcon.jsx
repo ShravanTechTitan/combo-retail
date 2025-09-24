@@ -58,9 +58,13 @@ export default function ProfileIcon() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("email");
+    localStorage.removeItem("role");
+    localStorage.removeItem("id");
+    localStorage.removeItem("rzp_checkout_anon_id");
     setMenuOpen(false);
     setIsLoggedIn(false);
     setUserRole(null);
+    console.log(localStorage)
     navigate("/");
   };
 

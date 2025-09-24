@@ -15,13 +15,17 @@ export default function UserSubscriptions() {
 
   // Active subs
   const activeSubscriptions = userSubscriptions.filter(
-    (sub) => sub.status === "active"
+    (sub) => new Date(sub.endDate) > new Date()
   );
   // Group subscriptions
-const expiredSubscriptions = userSubscriptions.filter(
-  (sub) => new Date(sub.endDate) < new Date()
-);
-
+  const expiredSubscriptions = Array.from(
+    new Map(
+      userSubscriptions
+        .filter((sub) => new Date(sub.endDate) < new Date())
+        .map((sub) => [sub.planId, sub]) // planId should be unique identifier
+    ).values()
+  );
+  
 // Avoid duplicates in available plans
 const availablePlans = plans.filter(
   (plan) =>
@@ -37,7 +41,7 @@ const availablePlans = plans.filter(
     );
 
     if (subs.length > 0 && allExpired) {
-      Swal.fire("Session Ended", "Your subscription has expired.", "info").then(
+      Swal.fire("Session Ended", "Your subscription has expired. you need to re-subscribe to continue. our features are only available to subscribed users.", "info").then(
         () => {
           // localStorage.clear();
            

@@ -66,11 +66,15 @@ export default function SidebarMenu() {
     <>
       {/* Toggle Button - shifted top-right corner */}
       <button
-        className="fixed top-4 right-4 z-50 bg-gray-900 text-white px-3 py-2 rounded-full shadow-lg hover:bg-gray-800 transition"
-        onClick={() => setOpen(!open)}
-      >
-        ☰
-      </button>
+  className="fixed top-4 right-4 z-50 flex flex-col items-end justify-between w-8 h-8 p-2
+             rounded-md  text-white shadow-md hover:bg-gray-800 transition"
+  onClick={() => setOpen(!open)}
+>
+  <span className="block h-0.5 w-7 bg-white rounded"></span>   {/* Large line */}
+  <span className="block h-0.5 w-6 bg-white rounded"></span>   {/* Medium line */}
+  <span className="block h-0.5 w-5 bg-white rounded"></span>   {/* Small line */}
+</button>
+
 
       {/* 🔹 Background Blur Overlay */}
       {open && (
@@ -131,13 +135,20 @@ export default function SidebarMenu() {
 
             {/* ✅ Membership points to /subscribe */}
             <li>
-              <Link
-                to="/subscribe"
-                onClick={() => setOpen(false)}
-                className={menuItemClass}
-              >
-                <FaIdCard className="text-green-400" /> Membership
-              </Link>
+            <Link
+              to={localStorage.getItem("token") ? "/subscribe" : "/login"}
+              onClick={() => {
+                if (localStorage.getItem("token")) {
+                  setOpen(false);
+                  console.log(localStorage.getItem("token"));
+                } else {
+                  console.log("no token");
+                }
+              }}
+              className={menuItemClass}
+            >
+              <FaIdCard className="text-green-400" /> Membership
+            </Link>
             </li>
 
             {/* ✅ Logout above Contact & About */}

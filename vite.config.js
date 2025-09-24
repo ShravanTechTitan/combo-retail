@@ -6,7 +6,9 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:8080/",
+        target: "http://localhost:8080",
+        target: "https://combo-retail-backend.onrender.com",
+        target:"api.universal.com", // Local backend URL for development
         changeOrigin: true,
         secure: false,
       },
