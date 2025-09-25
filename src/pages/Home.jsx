@@ -46,12 +46,9 @@ export default function Home() {
 
       {/* Hero Section */}
       <div className="flex flex-col items-center justify-center pt-25 h-50">
-      <h1 className="lg:text-2xl sm:text-3xl md:text-4xl font-Semibold text-gray-900 dark:text-white text-center mb-6">
+      <h1 className="lg:text-3xl sm:text-xl font-bold text-gray-900 dark:text-white text-center px-4 mb-6">
   Perfect <span className="bg-gradient-to-r from-cyan-400 to-orange-400 text-transparent bg-clip-text">Solution</span> for Mobile <span className="bg-gradient-to-r from-cyan-400 to-orange-400 text-transparent bg-clip-text">Technicians</span>, Shop <span className="bg-gradient-to-r from-cyan-400 to-orange-400 text-transparent bg-clip-text">Owners</span>, and <span className="bg-gradient-to-r from-cyan-400 to-orange-400 text-transparent bg-clip-text">Staff</span>
 </h1>
-
-
-
         {/* Search Bar */}
         <div className="flex justify-center pb-5">
           <div className="w-full max-w-md mx-auto">
@@ -109,6 +106,33 @@ export default function Home() {
           ))}
         </div>
       )}
+      <div className="py-8">
+  <h1 className="text-center text-2xl font-bold mb-6">Trusted by</h1>
+
+  <div className="flex space-x-6 overflow-x-auto scrollbar-hide px-4">
+    {[
+      { name: "Kanoni Power", link: "#" },
+      { name: "Techno Hub", link: "#" },
+      { name: "RepairMart", link: "#" },
+      { name: "MobileFix", link: "#" },
+    ].map((company, index) => (
+      <div
+        key={index}
+        className="flex-shrink-0 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center"
+      >
+        <div className="w-12 h-12 mx-auto bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg mb-3">
+          {company.name[0]}
+        </div>
+        <h3 className="text-base font-semibold dark:text-white">
+          {company.name}
+        </h3>
+       
+      </div>
+    ))}
+  </div>
+</div>
+
     </div>
+
   );
 }
