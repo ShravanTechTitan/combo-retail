@@ -45,13 +45,15 @@ export default function Home() {
       <Header />
 
       {/* Hero Section */}
-      <div className="flex flex-col items-center justify-center pt-20 h-69">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white text-center mb-6">
-          Perfect Solution for Mobile Technicians, Shop Owners, and Staff
-        </h1>
+      <div className="flex flex-col items-center justify-center pt-25 h-50">
+      <h1 className="lg:text-2xl sm:text-3xl md:text-4xl font-Semibold text-gray-900 dark:text-white text-center mb-6">
+  Perfect <span className="bg-gradient-to-r from-cyan-400 to-orange-400 text-transparent bg-clip-text">Solution</span> for Mobile <span className="bg-gradient-to-r from-cyan-400 to-orange-400 text-transparent bg-clip-text">Technicians</span>, Shop <span className="bg-gradient-to-r from-cyan-400 to-orange-400 text-transparent bg-clip-text">Owners</span>, and <span className="bg-gradient-to-r from-cyan-400 to-orange-400 text-transparent bg-clip-text">Staff</span>
+</h1>
+
+
 
         {/* Search Bar */}
-        <div className="flex justify-center">
+        <div className="flex justify-center pb-5">
           <div className="w-full max-w-md mx-auto">
             <SearchBar
               search={search}
@@ -66,7 +68,7 @@ export default function Home() {
 
       {/* Brands Section */}
       {loading ? (
-        <div className="flex justify-center items-center h-64 mt-2">
+        <div className="flex justify-center items-center mt-2">
           <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
         </div>
       ) : (
