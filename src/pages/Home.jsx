@@ -139,10 +139,10 @@ export default function Home() {
     Join Our Paid Subscription
   </h2>
   <p className="text-base sm:text-lg mb-6 text-gray-100">
-    Unlock exclusive access to <span className="font-semibold text-yellow-300">Universal Mobile Spare Parts</span> knowledge. 
+    Unlock exclusive access to <span className="font-semibold text-green-300">Universal Mobile Spare Parts</span> knowledge. 
     Get insights, updates, and benefits only for members.
   </p>
-  <button className="bg-yellow-400 hover:bg-yellow\\\-500 text-gray-900 font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300">
+  <button className="bg-green-400 hover:bg-green-500 text-gray-900 font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300">
     Subscribe Now
   </button>
 </div>
