@@ -5,6 +5,7 @@ import api from "../api/axiosConfig";
 import { useNavigate } from "react-router-dom";
 import slugify from "slugify";
 import "../assets/home.css";
+import Footer from "../components/userComponents/Footer";
 
 export default function Home() {
   const [search, setSearch] = useState("");
@@ -106,33 +107,48 @@ export default function Home() {
           ))}
         </div>
       )}
-      <div className="py-8">
+     <div className="py-8">
   <h1 className="text-center text-2xl font-bold mb-6">Trusted by</h1>
 
-  <div className="flex space-x-6 overflow-x-auto scrollbar-hide px-4">
-    {[
-      { name: "Kanoni Power", link: "#" },
-      { name: "Techno Hub", link: "#" },
-      { name: "RepairMart", link: "#" },
-      { name: "MobileFix", link: "#" },
-    ].map((company, index) => (
-      <div
-        key={index}
-        className="flex-shrink-0 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center"
-      >
-        <div className="w-12 h-12 mx-auto bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg mb-3">
-          {company.name[0]}
+  <div className="flex justify-center">
+    <div className="flex space-x-6 overflow-x-auto scrollbar-hide px-4 max-w-4xl">
+      {[
+        { name: "Kanoni Power", link: "#" },
+        { name: "Techno Hub", link: "#" },
+        { name: "RepairMart", link: "#" },
+        { name: "MobileFix", link: "#" },
+      ].map((company, index) => (
+        <div
+          key={index}
+          className="flex-shrink-0 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center"
+        >
+          <div className="w-12 h-12 mx-auto bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg mb-3">
+            {company.name[0]}
+          </div>
+          <h3 className="text-base font-semibold dark:text-white">
+            {company.name}
+          </h3>
         </div>
-        <h3 className="text-base font-semibold dark:text-white">
-          {company.name}
-        </h3>
-       
-      </div>
-    ))}
+      ))}
+    </div>
   </div>
 </div>
 
+<div className="bg-gradient-to-r from-green-500 to-emerald-600 dark:from-gray-800 dark:to-gray-900 text-white rounded-2xl shadow-lg p-8 max-w-lg mx-auto text-center">
+  <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+    Join Our Paid Subscription
+  </h2>
+  <p className="text-base sm:text-lg mb-6 text-gray-100">
+    Unlock exclusive access to <span className="font-semibold text-yellow-300">Universal Mobile Spare Parts</span> knowledge. 
+    Get insights, updates, and benefits only for members.
+  </p>
+  <button className="bg-yellow-400 hover:bg-yellow\\\-500 text-gray-900 font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300">
+    Subscribe Now
+  </button>
+</div>
+<Footer></Footer>
     </div>
+
 
   );
 }
