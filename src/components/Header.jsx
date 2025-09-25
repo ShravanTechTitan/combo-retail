@@ -23,7 +23,7 @@ export default function Header() {
           alt="Universal Combo Logo"
           className="h-8 w-8 sm:h-10 sm:w-10 rounded-full shadow-md border-2 border-white"
         />
-        <h1 className="text-lg sm:text-xl font-bold tracking-wide">
+        <h1 className="lg:text-xl sm:text-base font-bold  tracking-wide">
           <span className="text-blue-400">UNIVERSAL</span>
           <span className="text-orange-400">COMBO</span>
         </h1>
@@ -41,7 +41,7 @@ export default function Header() {
   {/* Compact button on mobile */}
   <button
     onClick={() => navigate("/subscribe")}
-    className="bg-green-600 text-white px-3 py-2 mr-10 rounded-lg hover:bg-green-700 sm:hidden text-xs"
+    className="bg-green-600 text-white px-2.5 py-2 mr-10 rounded-lg hover:bg-green-700 sm:hidden text-xs"
   >
     Subscribe
   </button>
