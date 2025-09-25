@@ -142,13 +142,11 @@ export default function Home() {
     Unlock exclusive access to <span className="font-semibold text-green-300">Universal Mobile Spare Parts</span> knowledge. 
     Get insights, updates, and benefits only for members.
   </p>
-  <button className="bg-green-400 hover:bg-green-500 text-gray-900 font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300">
+  <button className="bg-green-400 hover:bg-green-500 text-gray-900 font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300" onClick={() => localStorage.getItem("token") ? navigate("/subscribe") : navigate("/login")}>
     Subscribe Now
   </button>
 </div>
 <Footer></Footer>
     </div>
-
-
   );
 }

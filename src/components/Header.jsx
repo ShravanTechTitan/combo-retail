@@ -32,7 +32,7 @@ export default function Header() {
       <div className="flex flex-row items-center gap-2 sm:gap-3">
   {/* Full button on larger screens */}
   <button
-    onClick={() => localStorage.getItem("token") ? "/subscribe" : "/login"}
+    onClick={() => localStorage.getItem("token") ? navigate("/subscribe") : navigate("/login")}
     className="bg-green-600 text-white px-3 py-2 mr-10 sm:px-5 py-1 sm:py-2 rounded-lg hover:bg-green-700 hidden sm:block text-sm sm:text-base"
   >
     Subscribe Now
@@ -40,7 +40,7 @@ export default function Header() {
 
   {/* Compact button on mobile */}
   <button
-    onClick={() => navigate("/subscribe")}
+   onClick={() => localStorage.getItem("token") ? navigate("/subscribe") : navigate("/login")}
     className="bg-green-600 text-white px-2.5 py-2 mr-10 rounded-lg hover:bg-green-700 sm:hidden text-xs"
   >
     Subscribe
