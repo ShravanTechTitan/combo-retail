@@ -10,10 +10,16 @@ export default function NoCopyProvider({ children }) {
     const handleCopy = (e) => e.preventDefault();
     // Optional: block PrintScreen (deterrent only)
     const handleKeyDown = (e) => {
-      if (e.key === "PrintScreen") {
-        alert("⚠️ Screenshots are restricted on this page!");
-        navigator.clipboard.writeText(""); // Windows clears clipboard
-      }
+        const handleKeyDown = (e) => {
+            if (e.key === "PrintScreen") {
+              alert("⚠️ Screenshots are restricted on this page!");
+              navigator.clipboard.writeText(""); // clears clipboard on Windows
+            }
+          };
+        
+          window.addEventListener("keydown", handleKeyDown);
+          return () => window.removeEventListener("keydown", handleKeyDown);
+        
     };
 
     document.addEventListener("contextmenu", handleContextMenu);

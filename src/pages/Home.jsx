@@ -111,7 +111,7 @@ export default function Home() {
   <div className="flex justify-center">
     <div className="flex space-x-6 overflow-x-auto scrollbar-hide px-4 max-w-4xl">
       {[
-        { name: "Kanoni Power", link: "#" },
+        { name: "Kajoni Power", link: "#" },
         { name: "Techno Hub", link: "#" },
         { name: "RepairMart", link: "#" },
         { name: "MobileFix", link: "#" },
