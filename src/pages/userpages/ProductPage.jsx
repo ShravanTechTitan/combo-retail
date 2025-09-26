@@ -79,6 +79,7 @@ export default function ProductPage() {
     {/* Supported Models */}
     {product.modelIds?.length > 0 && (
       <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+        
         <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">
           Supported Models
         </h2>

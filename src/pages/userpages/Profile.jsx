@@ -1,18 +1,27 @@
 import React, { useState, useEffect } from "react";
 import api from "../../api/axiosConfig";
+import Header from "../../components/Header";
 
 export default function UserProfile() {
   const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({});
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [subscriptions, setSubscriptions] = useState([]);
 
+  // ✅ Fetch profile
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const data = await api.get("/users/profile");
-        setUser(data);
-        setFormData(data);
+        const res = await api.get("/users/profile");
+        setUser(res.data);
+        setFormData(res.data);
+
+        const subRes = await api.get(`/user-subscriptions/user/${localStorage.getItem("id")}`);
+        console.log(subRes.data.activeSubscription
+        )
+        setSubscriptions(subRes.data.activeSubscription || []);
       } catch (err) {
         console.error("Error fetching profile:", err);
       } finally {
@@ -22,18 +31,23 @@ export default function UserProfile() {
     fetchProfile();
   }, []);
 
+  // ✅ Handle input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // ✅ Save changes
   const handleSave = async () => {
+    setSaving(true);
     try {
-      const updated = await updateProfile(formData);
-      setUser(updated);
+      const res = await api.put("/users/profile", formData);
+      console.log(res)
+      setUser(res.data);
       setEditing(false);
-      localStorage.setItem("token", updated.token);
     } catch (err) {
       console.error("Error updating profile:", err);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -46,22 +60,31 @@ export default function UserProfile() {
   }
 
   return (
-    <div className="max-w-md mx-auto my-6">
-      <div className="bg-white shadow-md rounded-xl p-6">
-        <div className="mb-4">
-          <h4 className="text-xl font-semibold text-gray-800">{user.name}</h4>
-          <p className="text-gray-500">{user.email}</p>
+    <div className=" bg-white dark:bg-gray-900 max-w-md mx-auto my-8 px-4">
+      <Header/>
+      <div className="pt-10">
+      <div className="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-5">
+        {/* Header */}
+        <div className="mb-4 text-center">
+          <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-2xl">
+            {user?.name?.charAt(0) || "U"}
+          </div>
+          <h4 className="mt-3 text-xl font-semibold text-gray-800 dark:text-white">
+            {user?.name}
+          </h4>
+          <p className="text-gray-500">{user?.email}</p>
         </div>
 
-        <hr className="my-4" />
+        <hr className="my-4 border-gray-300 dark:border-gray-600" />
 
+        {/* Profile View/Edit */}
         {!editing ? (
           <div>
             <p className="mb-3">
-              <span className="font-medium">Phone:</span> {user.number}
+              <span className="font-medium">Phone:</span> {user?.number}
             </p>
             <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               onClick={() => setEditing(true)}
             >
               Edit Profile
@@ -70,9 +93,7 @@ export default function UserProfile() {
         ) : (
           <form className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Name
-              </label>
+              <label className="block text-sm font-medium mb-1">Name</label>
               <input
                 type="text"
                 name="name"
@@ -83,9 +104,7 @@ export default function UserProfile() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email
-              </label>
+              <label className="block text-sm font-medium mb-1">Email</label>
               <input
                 type="email"
                 name="email"
@@ -96,9 +115,7 @@ export default function UserProfile() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone
-              </label>
+              <label className="block text-sm font-medium mb-1">Phone</label>
               <input
                 type="text"
                 name="number"
@@ -112,9 +129,14 @@ export default function UserProfile() {
               <button
                 type="button"
                 onClick={handleSave}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                disabled={saving}
+                className={`px-4 py-2 text-white rounded-lg ${
+                  saving
+                    ? "bg-green-400 cursor-not-allowed"
+                    : "bg-green-600 hover:bg-green-700"
+                }`}
               >
-                Save
+                {saving ? "Saving..." : "Save"}
               </button>
               <button
                 type="button"
@@ -127,6 +149,29 @@ export default function UserProfile() {
           </form>
         )}
       </div>
+      </div>
+      <div className="mt-6">
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">
+              Your Subscriptions
+            </h3>
+            {subscriptions.length === 0 ? (
+              <p className="text-sm text-gray-500">No active subscriptions.</p>
+            ) : (
+              <ul className="space-y-2">
+                {subscriptions.map((sub, idx) => (
+                  <li
+                    key={idx}
+                    className="px-4 py-2 bg-green-100 dark:bg-green-900 rounded-lg flex justify-between items-center"
+                  >
+                    <span className="font-medium">{sub.name}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
+                      {sub.status}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
     </div>
   );
 }

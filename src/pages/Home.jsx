@@ -44,7 +44,6 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Header */}
       <Header />
-
       {/* Hero Section */}
       <div className="flex flex-col items-center justify-center pt-25 h-50">
       <h1 className="lg:text-3xl sm:text-xl font-bold text-gray-900 dark:text-white text-center px-4 mb-6">
@@ -63,7 +62,6 @@ export default function Home() {
           </div>
         </div>
         </div>
-
       {/* Brands Section */}
       {loading ? (
         <div className="flex justify-center items-center mt-2">
