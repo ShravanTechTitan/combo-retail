@@ -52,6 +52,7 @@ export default function SidebarMenu() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("email");
+    localStorage.removeItem("id")
     setIsLoggedIn(false);
     setUserRole(null);
     setOpen(false);

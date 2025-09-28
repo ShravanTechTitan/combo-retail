@@ -12,6 +12,7 @@ export default function UserSubscriptions() {
 
   const userId = localStorage.getItem("id");
   const navigate = useNavigate();
+  
 
   // Active subs
   const activeSubscriptions = userSubscriptions.filter(

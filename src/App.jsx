@@ -21,6 +21,7 @@ import Subscribe from "./pages/userpages/Subscribe.jsx";
 import AdminSubscriptions from "./pages/DashbordPages/AdminSubscriptions.jsx";
 import Contact from "./pages/userpages/Contact.jsx";
 import UserProfile from "./pages/userpages/Profile.jsx";
+import ProtectedRoute from "./components/userComponents/ProtectedRoute.jsx";
 
 // App.jsx
 
@@ -72,7 +73,7 @@ function App() {
         <Route path="/combo/:id/:modelId" element={<ModelPage />} /> {/* Level 3 */}
         <Route path="/models/:brand/:brandId" element={<ModelDetails />} />
          <Route path="/contact" element={<Contact />} />
-        <Route path="/models/:brand/:brandId/:partCategoryName/:partCategoryId" element={<PartDetails />} />
+        <Route path="/models/:brand/:brandId/:partCategoryName/:partCategoryId" element={ <ProtectedRoute user={user} ><PartDetails /></ProtectedRoute>} />
          <Route path="/product/:id" element={<ProductPage />} />
          <Route path="/subscribe" element={<Subscribe></Subscribe>} />
          <Route path="/profile" element={<UserProfile></UserProfile>}/>

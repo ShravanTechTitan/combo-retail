@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom"; 
 import Header from "../components/Header";
 import { loginUser, registerUser, sendOtp, verifyOtp, resetPassword } from "../api/authApi";
 
@@ -11,6 +12,11 @@ export default function AuthPage() {
 
   const [forgotPasswordStep, setForgotPasswordStep] = useState(false);
   const [otpData, setOtpData] = useState({ email: "", otp: "", newPassword: "" });
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -37,7 +43,9 @@ export default function AuthPage() {
         localStorage.setItem("id", data.id);
         localStorage.setItem("role", data.role);
         showToast(`${isLogin ? "Login" : "Signup"} successful! 🎉`);
-        setTimeout(() => window.location.href = "/", 1500);
+
+        // ✅ redirect to previous page after short delay
+        setTimeout(() => navigate(from, { replace: true }), 1200);
       }
     } catch (err) {
       setError(err.response?.data?.message || err.message || "Something went wrong!");
