@@ -74,7 +74,7 @@ function App() {
         <Route path="/models/:brand/:brandId" element={<ModelDetails />} />
          <Route path="/contact" element={<Contact />} />
         <Route path="/models/:brand/:brandId/:partCategoryName/:partCategoryId" element={ <ProtectedRoute user={user} ><PartDetails /></ProtectedRoute>} />
-         <Route path="/product/:id" element={<ProductPage />} />
+         <Route path="/product/:id" element={ <ProtectedRoute user={user} ><ProductPage /></ProtectedRoute>} />
          <Route path="/subscribe" element={<Subscribe></Subscribe>} />
          <Route path="/profile" element={<UserProfile></UserProfile>}/>
     </Routes>
