@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { FaBox, FaMobileAlt, FaFileAlt,FaUsers } from "react-icons/fa";
+import { FaBox, FaMobileAlt, FaFileAlt, FaUsers, FaBlog } from "react-icons/fa";
 
 export default function Sidebar({ open, handleLogout }) {
   const location = useLocation();
@@ -15,6 +15,7 @@ export default function Sidebar({ open, handleLogout }) {
     { name: "Products", path: "/dashboard/Products", icon: <FaFileAlt /> },
     { name: "Model", path: "/dashboard/ModelPage", icon: <FaFileAlt /> },
     { name: "Brand", path: "/dashboard/BrandPage", icon: <FaFileAlt /> },
+    { name: "Blogs", path: "/dashboard/blogs", icon: <FaBlog /> },
 
 ];
 

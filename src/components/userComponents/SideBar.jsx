@@ -206,9 +206,9 @@ export default function SidebarMenu() {
         </div>
 
         {/* ✅ Social Links (Fixed Bottom) */}
-        <div className="border-t border-gray-600/40 px-6 py-4">
-          <p className="font-medium mb-2 text-gray-300">Follow Us On</p>
-          <div className="flex flex-wrap gap-4 text-2xl">
+        <div className="border-t border-gray-600/40 px-4 sm:px-6 py-3 sm:py-4">
+          <p className="font-medium mb-2 text-gray-300 text-xs sm:text-sm md:text-base">Follow Us On</p>
+          <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 text-base sm:text-lg md:text-xl lg:text-2xl">
             <FaInstagram className="cursor-pointer text-pink-500 hover:scale-110 transition" />
             <FaWhatsapp className="cursor-pointer text-green-500 hover:scale-110 transition" />
             <FaFacebook className="cursor-pointer text-blue-500 hover:scale-110 transition" />

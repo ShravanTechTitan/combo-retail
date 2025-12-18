@@ -1,4 +1,4 @@
-import { Routes, Route, Router } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import DashboardLayout from "./pages/DashbordPages/DashboardLayout.jsx";
 import Combos from "./pages/DashbordPages/Combos.jsx";
@@ -19,11 +19,11 @@ import ProductPage from "./pages/userpages/ProductPage.jsx";
 import AdminDashboard from "./pages/DashbordPages/AdminDashboard.jsx";
 import Subscribe from "./pages/userpages/Subscribe.jsx";
 import AdminSubscriptions from "./pages/DashbordPages/AdminSubscriptions.jsx";
+import Blogs from "./pages/DashbordPages/Blogs.jsx";
+import BlogPage from "./pages/userpages/BlogPage.jsx";
 import Contact from "./pages/userpages/Contact.jsx";
 import UserProfile from "./pages/userpages/Profile.jsx";
 import ProtectedRoute from "./components/userComponents/ProtectedRoute.jsx";
-
-// App.jsx
 
 
 function App() {
@@ -69,9 +69,11 @@ function App() {
         <Route path="mobiles" element={<Mobiles />} />
         <Route path="subscriptions" element={<Subscriptions />} />
         <Route path="AdminSubscriptions" element={<AdminSubscriptions></AdminSubscriptions>}/>
+        <Route path="blogs" element={<Blogs />} />
       </Route>
         <Route path="/combo/:id/:modelId" element={<ModelPage />} /> {/* Level 3 */}
         <Route path="/models/:brand/:brandId" element={<ModelDetails />} />
+        <Route path="/blogs" element={<BlogPage />} />
          <Route path="/contact" element={<Contact />} />
         <Route path="/models/:brand/:brandId/:partCategoryName/:partCategoryId" element={ <ProtectedRoute user={user} ><PartDetails /></ProtectedRoute>} />
          <Route path="/product/:id" element={ <ProtectedRoute user={user} ><ProductPage /></ProtectedRoute>} />

@@ -4,6 +4,19 @@ import InputField from "../../components/dashboardComponents/InputField";
 import ActionButtons from "../../components/dashboardComponents/ActionButtons";
 import ConfirmDialog from "../../components/dashboardComponents/ConfirmDialog";
 import api from "../../api/axiosConfig";
+import * as FaIcons from "react-icons/fa";
+import * as MdIcons from "react-icons/md";
+import * as BiIcons from "react-icons/bi";
+import * as AiIcons from "react-icons/ai";
+import * as CiIcons from "react-icons/ci";
+import * as ImIcons from "react-icons/im";
+import * as IoIcons from "react-icons/io";
+import * as RiIcons from "react-icons/ri";
+import * as GiIcons from "react-icons/gi";
+import * as LuIcons from "react-icons/lu";
+
+
+
 
 export default function PartCategoryPage() {
   const [Partcategories, setPartCategories] = useState([]);
@@ -11,12 +24,31 @@ export default function PartCategoryPage() {
   const [editing, setEditing] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
-  const [formData, setFormData] = useState({ name: "", description: "" });
+  const [formData, setFormData] = useState({ name: "", description: "" , icon:""});
 
   // ✅ Loading states
   const [loadingData, setLoadingData] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [deleting, setDeleting] = useState(false);
+
+  const allIcons = {
+    ...FaIcons,
+    ...MdIcons,
+    ...BiIcons,
+    ...AiIcons,
+    ...CiIcons,
+    ...ImIcons,
+    ...IoIcons,
+    ...RiIcons,
+    ...GiIcons,
+    ...LuIcons,
+    ...FaIcons,
+    ...MdIcons,
+    ...BiIcons,
+    ...AiIcons,
+    ...CiIcons,
+  };
+  
 
   useEffect(() => {
     fetchPartCategories();
@@ -59,7 +91,7 @@ export default function PartCategoryPage() {
 
   const handleEdit = (cat) => {
     setEditing(cat);
-    setFormData({ name: cat.name, description: cat.description });
+    setFormData({ name: cat.name, description: cat.description, icon: cat.icon || "" });
     setShowForm(true);
   };
 
@@ -106,6 +138,7 @@ export default function PartCategoryPage() {
               <tr className="bg-gray-100 dark:bg-gray-800  text-gray-700 dark:text-gray-200">
                 <th className="px-3 py-2 text-left">Name</th>
                 <th className="px-3 py-2 text-left">Description</th>
+                <th className="px-3 py-y text-left">Icon</th>
                 <th className="px-3 py-2 text-center">Actions</th>
               </tr>
             </thead>
@@ -117,6 +150,14 @@ export default function PartCategoryPage() {
                 >
                   <td className="px-3 py-2">{c.name}</td>
                   <td className="px-3 py-2">{c.description}</td>
+                  <td className="px-3 py-2 flex items-center gap-2">
+                  {c.icon && allIcons[c.icon] ? (
+                    <span className="text-xl text-green-600">{allIcons[c.icon]()}</span>
+                  ) : (
+                    <span className="text-gray-400">No icon</span>
+                  )}
+
+                  </td>
                   <td className="px-3 py-2 text-center">
                     <ActionButtons
                       onEdit={() => handleEdit(c)}
@@ -156,6 +197,23 @@ export default function PartCategoryPage() {
                 onChange={handleChange}
                 placeholder="Short description"
               />
+              <InputField
+                label="Icon (React Icon name)"
+                name="icon"
+                value={formData.icon}
+                onChange={handleChange}
+                placeholder="e.g. FaBatteryFull, MdPhoneAndroid, BiChip, CiMobile1"
+              />
+                    {formData.icon && allIcons[formData.icon] ? (
+                      <div className="flex items-center gap-2 text-green-500">
+                        <span className="text-3xl">{allIcons[formData.icon]()}</span>
+                        <span>Preview</span>
+                      </div>
+                    ) : formData.icon ? (
+                      <span className="text-red-500 text-sm">⚠️ Icon not found</span>
+                    ) : null}
+
+
               <div className="flex justify-end gap-3 pt-3">
                 <button
                   type="button"
