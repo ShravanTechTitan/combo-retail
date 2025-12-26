@@ -389,13 +389,26 @@ const getExpiryTimeLeft = (endDate) => {
                       / {formatDuration(plan.duration)}
                     </span>
                   </div>
-                  <button
-                    onClick={() => handleSubscribe(plan)}
-                    disabled={subscribing === plan._id}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold"
-                  >
-                    {subscribing === plan._id ? "Processing..." : "Subscribe"}
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleSubscribe(plan)}
+                      disabled={subscribing === plan._id}
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold"
+                    >
+                      {subscribing === plan._id ? "Processing..." : "Subscribe"}
+                    </button>
+                    {plan.price > 0 && (
+                      <a
+                        href={`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080'}/api/invoice/${plan._id}/0`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-sm"
+                        title="View Invoice"
+                      >
+                        📄
+                      </a>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

@@ -1,12 +1,12 @@
+import React, { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import {jwtDecode} from "jwt-decode";
 import Home from "./pages/Home.jsx";
 import DashboardLayout from "./pages/DashbordPages/DashboardLayout.jsx";
 import Combos from "./pages/DashbordPages/Combos.jsx";
 import Mobiles from "./pages/Mobiles.jsx";
 import Subscriptions from "./pages/DashbordPages/Subscriptions.jsx";
 import Login from "./pages/Login.jsx";
-import { useEffect, useState } from "react";
-import {jwtDecode} from "jwt-decode";
 import ModelPage from "./pages/ModelPage.jsx";
 import DeviceCategories from "./pages/DashbordPages/DeviceCategories.jsx";
 import PartCategories from "./pages/DashbordPages/PartCategories.jsx";
@@ -22,27 +22,28 @@ import AdminSubscriptions from "./pages/DashbordPages/AdminSubscriptions.jsx";
 import Blogs from "./pages/DashbordPages/Blogs.jsx";
 import BlogPage from "./pages/userpages/BlogPage.jsx";
 import BlogDetailPage from "./pages/userpages/BlogDetailPage.jsx";
+import Analytics from "./pages/DashbordPages/Analytics.jsx";
+import ActivityLogs from "./pages/DashbordPages/ActivityLogs.jsx";
+import Notifications from "./pages/DashbordPages/Notifications.jsx";
+import AdvancedSearch from "./pages/userpages/AdvancedSearch.jsx";
 import Contact from "./pages/userpages/Contact.jsx";
 import UserProfile from "./pages/userpages/Profile.jsx";
 import ProtectedRoute from "./components/userComponents/ProtectedRoute.jsx";
 
 
 function App() {
-
-  useEffect(() => {
-  const darkMode = localStorage.getItem("theme") === "dark";
-  if (darkMode) {
-    document.documentElement.classList.add("dark");
-  } else {
-    document.documentElement.classList.remove("dark");
-  }
-}, []);
-
-
   const [user, setUser] = useState(null);
+
   useEffect(() => {
+    const darkMode = localStorage.getItem("theme") === "dark";
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
 
-
+  useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
@@ -62,6 +63,9 @@ function App() {
       <Route path="/dashboard" element={<DashboardLayout />}>
         <Route index element={<AdminDashboard />} />
         <Route path="adminDashboard" element={<AdminDashboard></AdminDashboard>}></Route>
+        <Route path="analytics" element={<Analytics />} />
+        <Route path="activity-logs" element={<ActivityLogs />} />
+        <Route path="notifications" element={<Notifications />} />
         <Route path="deviceCategories" element={<DeviceCategories/>}></Route>
         <Route path="partCategories" element={<PartCategories/>}></Route>
         <Route path="BrandPage" element={<BrandPage></BrandPage>}/>
@@ -77,6 +81,7 @@ function App() {
         <Route path="/models/:brand/:brandId" element={<ModelDetails />} />
         <Route path="/blogs" element={<BlogPage />} />
         <Route path="/blog/:id" element={<BlogDetailPage />} />
+        <Route path="/search" element={<AdvancedSearch />} />
          <Route path="/contact" element={<Contact />} />
         <Route path="/models/:brand/:brandId/:partCategoryName/:partCategoryId" element={ <ProtectedRoute user={user} ><PartDetails /></ProtectedRoute>} />
          <Route path="/product/:id" element={ <ProtectedRoute user={user} ><ProductPage /></ProtectedRoute>} />

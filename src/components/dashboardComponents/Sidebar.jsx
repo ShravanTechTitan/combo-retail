@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { FaBox, FaMobileAlt, FaFileAlt, FaUsers, FaBlog } from "react-icons/fa";
+import { FaBox, FaMobileAlt, FaFileAlt, FaUsers, FaBlog, FaChartLine, FaBell } from "react-icons/fa";
 
 export default function Sidebar({ open, handleLogout }) {
   const location = useLocation();
@@ -7,6 +7,9 @@ export default function Sidebar({ open, handleLogout }) {
   const menuItems = [
    
     {name:"Admin Dashbord", path:"/dashboard/adminDashboard", icon:<FaUsers />},
+    {name:"Analytics", path:"/dashboard/analytics", icon:<FaChartLine />},
+    {name:"Activity Logs", path:"/dashboard/activity-logs", icon:<FaFileAlt />},
+    {name:"Notifications", path:"/dashboard/notifications", icon:<FaBell />},
     {name:"Admin Subscriptions", path:"/dashboard/AdminSubscriptions", icon:<FaUsers />},
    
     { name: "Subscriptions", path: "/dashboard/subscriptions", icon: <FaFileAlt /> },

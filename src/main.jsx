@@ -1,17 +1,22 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
+import React, { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
+// Temporarily disable HelmetProvider due to React 19 compatibility issues
+// import { HelmetProvider } from "react-helmet-async";
 import App from "./App";
-import NoCopyProvider from "./components/userComponents/NoCopyProvider";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
-  <HelmetProvider>
-  <NoCopyProvider>
-  <App />
-  </NoCopyProvider>
-  </HelmetProvider>
-    
-  </BrowserRouter>
+const rootElement = document.getElementById("root");
+if (!rootElement) throw new Error("Root element not found");
+
+const root = createRoot(rootElement);
+
+root.render(
+  <StrictMode>
+    <BrowserRouter>
+      {/* Temporarily disabled HelmetProvider due to React 19 compatibility */}
+      {/* <HelmetProvider> */}
+      <App />
+      {/* </HelmetProvider> */}
+    </BrowserRouter>
+  </StrictMode>
 );

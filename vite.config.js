@@ -3,12 +3,13 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    dedupe: ['react', 'react-dom'], // Ensure single React instance
+  },
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:8080",
-        target: "https://combo-retails-bakcend.onrender.com",
-        target:"api.universal.com", // Local backend URL for development
+        target: "http://localhost:8080", // Local backend URL for development
         changeOrigin: true,
         secure: false,
       },

@@ -67,7 +67,7 @@ export default function SidebarMenu() {
     <>
       {/* Toggle Button - shifted top-right corner */}
       <button
-  className="fixed top-4 right-4 z-50 flex flex-col items-end justify-between w-8 h-8 p-2
+  className="fixed top-4 right-4 z-[101] flex flex-col items-end justify-between w-8 h-8 p-2
              rounded-md  text-white shadow-md hover:bg-gray-800 transition"
   onClick={() => setOpen(!open)}
 >
@@ -80,7 +80,7 @@ export default function SidebarMenu() {
       {/* 🔹 Background Blur Overlay */}
       {open && (
         <div
-          className="fixed inset-0 backdrop-blur-sm bg-black/40 z-40"
+          className="fixed inset-0 backdrop-blur-sm bg-black/40 z-[95]"
           onClick={() => setOpen(false)}
         ></div>
       )}
@@ -91,7 +91,7 @@ export default function SidebarMenu() {
         bg-[rgba(15,23,42,0.92)] backdrop-blur-md 
         text-white transform ${
           open ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 ease-in-out z-50 shadow-xl flex flex-col`}
+        } transition-transform duration-300 ease-in-out z-[99] shadow-xl flex flex-col`}
       >
         {/* Header */}
         <div className="flex justify-between items-center border-b border-gray-600/40 px-4 py-3">

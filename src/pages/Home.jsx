@@ -79,7 +79,7 @@ export default function Home() {
       <Header />
 
       {/* Hero Section - Mobile Optimized */}
-      <section className="relative pt-20 sm:pt-24 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="relative pt-20 sm:pt-24 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 overflow-visible">
         <div className="max-w-7xl mx-auto">
           <div className="text-center space-y-4 sm:space-y-6 animate-fade-in">
             <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white leading-tight px-2">
@@ -94,8 +94,8 @@ export default function Home() {
             </p>
             
             {/* Search Bar - Mobile Full Width */}
-            <div className="flex justify-center pt-4 sm:pt-6 w-full max-w-2xl mx-auto px-2">
-              <div className="w-full transform transition-all duration-300 sm:hover:scale-105">
+            <div className="flex justify-center pt-4 sm:pt-6 w-full max-w-2xl mx-auto px-2 relative">
+              <div className="w-full relative">
                 <SearchBar
                   search={search}
                   setSearch={setSearch}
@@ -130,7 +130,7 @@ export default function Home() {
       </section>
 
       {/* Brands Section - Mobile Optimized */}
-      <section className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-800">
+      <section className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-800 relative">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-6 sm:mb-10">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3">
@@ -382,11 +382,11 @@ export default function Home() {
               </p>
               
               {/* Benefits - Mobile Stack */}
-              <div className="flex flex-col sm:grid sm:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8 max-w-2xl mx-auto">
+              <div className="flex flex-col sm:flex-row sm:grid sm:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8 max-w-2xl mx-auto">
                 {["Premium Content", "Expert Guides", "Priority Support"].map((benefit, index) => (
-                  <div key={index} className="flex items-center gap-2 bg-white bg-opacity-20 rounded-lg p-2 sm:p-3 backdrop-blur-sm w-full">
-                    <span className="text-lg sm:text-xl flex-shrink-0">✓</span>
-                    <span className="text-xs sm:text-sm font-medium">{benefit}</span>
+                  <div key={index} className="flex items-center justify-center gap-2 bg-white bg-opacity-20 rounded-lg p-3 sm:p-4 backdrop-blur-sm w-full min-h-[50px] sm:min-h-[60px] border border-white border-opacity-30">
+                    <span className="text-lg sm:text-xl flex-shrink-0 text-green-200 font-bold">✓</span>
+                    <span className="text-xs sm:text-sm md:text-base font-semibold text-white whitespace-nowrap">{benefit}</span>
                   </div>
                 ))}
               </div>

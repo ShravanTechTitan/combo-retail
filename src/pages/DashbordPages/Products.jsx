@@ -5,10 +5,24 @@ import api from "../../api/axiosConfig";
 
 export default function ProductManager() {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const brandRef = useRef(null);
   const modelRef = useRef(null);
+
+  // Filters and Pagination
+  const [filters, setFilters] = useState({
+    search: "",
+    brandId: "",
+    categoryId: "",
+    modelId: "",
+  });
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+  });
 
   const initialForm = {
     id: "",
@@ -67,12 +81,75 @@ export default function ProductManager() {
     }
   };
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (page = 1, limit = 1000) => {
     try {
-      const res = await api.get("/products");
-      setProducts(res.data);
+      // Fetch all products with a high limit, or use pagination
+      const res = await api.get(`/products?page=${page}&limit=${limit}`);
+      // Handle new response structure with pagination
+      if (res.data.products && Array.isArray(res.data.products)) {
+        setProducts(res.data.products);
+        // Update pagination state from backend response
+        if (res.data.pagination) {
+          setPagination(prev => ({
+            ...prev,
+            total: res.data.pagination.total,
+            totalPages: res.data.pagination.totalPages,
+          }));
+        }
+      } else if (Array.isArray(res.data)) {
+        setProducts(res.data);
+      } else {
+        setProducts([]);
+      }
     } catch (error) {
       console.error("Error fetching products:", error);
+      setProducts([]);
+    }
+  };
+
+  // Fetch all products by making multiple requests if needed
+  const fetchAllProducts = async () => {
+    try {
+      setLoadingData(true);
+      // First, get total count
+      const firstPage = await api.get("/products?page=1&limit=1000");
+      const total = firstPage.data.pagination?.total || firstPage.data.products?.length || 0;
+      
+      if (total <= 1000) {
+        // All products fit in one request
+        if (firstPage.data.products && Array.isArray(firstPage.data.products)) {
+          setProducts(firstPage.data.products);
+          setPagination(prev => ({
+            ...prev,
+            total: firstPage.data.pagination?.total || total,
+            totalPages: firstPage.data.pagination?.totalPages || 1,
+          }));
+        }
+      } else {
+        // Need to fetch all pages
+        let allProducts = [...(firstPage.data.products || [])];
+        const totalPages = firstPage.data.pagination?.totalPages || Math.ceil(total / 1000);
+        
+        // Fetch remaining pages
+        for (let page = 2; page <= totalPages; page++) {
+          const res = await api.get(`/products?page=${page}&limit=1000`);
+          if (res.data.products && Array.isArray(res.data.products)) {
+            allProducts = [...allProducts, ...res.data.products];
+          }
+        }
+        
+        setProducts(allProducts);
+        setPagination(prev => ({
+          ...prev,
+          total: total,
+          totalPages: 1, // Since we loaded all, show as single page
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching all products:", error);
+      setProducts([]);
+    } finally {
+      setLoadingData(false);
     }
   };
 
@@ -80,11 +157,60 @@ export default function ProductManager() {
   useEffect(() => {
     const fetchAll = async () => {
       setLoadingData(true);
-      await Promise.all([fetchBrands(), fetchModels(), fetchPartCategories(), fetchProducts()]);
+      await Promise.all([fetchBrands(), fetchModels(), fetchPartCategories()]);
+      await fetchAllProducts(); // Fetch all products
       setLoadingData(false);
     };
     fetchAll();
   }, []);
+
+  // Apply filters and pagination
+  useEffect(() => {
+    let filtered = [...products];
+
+    // Apply search filter
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase();
+      filtered = filtered.filter(
+        (p) =>
+          p.name?.toLowerCase().includes(searchLower) ||
+          p.description?.toLowerCase().includes(searchLower) ||
+          p.tags?.some((tag) => tag.toLowerCase().includes(searchLower)) ||
+          p.brandIds?.some((b) => b.name?.toLowerCase().includes(searchLower)) ||
+          p.modelIds?.some((m) => m.name?.toLowerCase().includes(searchLower))
+      );
+    }
+
+    // Apply brand filter
+    if (filters.brandId) {
+      filtered = filtered.filter((p) =>
+        p.brandIds?.some((b) => b._id === filters.brandId || b === filters.brandId)
+      );
+    }
+
+    // Apply category filter
+    if (filters.categoryId) {
+      filtered = filtered.filter(
+        (p) =>
+          p.partCategoryId?._id === filters.categoryId || p.partCategoryId === filters.categoryId
+      );
+    }
+
+    // Apply model filter
+    if (filters.modelId) {
+      filtered = filtered.filter((p) =>
+        p.modelIds?.some((m) => m._id === filters.modelId || m === filters.modelId)
+      );
+    }
+
+    // Update pagination total
+    setPagination((prev) => ({ ...prev, total: filtered.length }));
+
+    // Apply pagination
+    const start = (pagination.page - 1) * pagination.limit;
+    const end = start + pagination.limit;
+    setFilteredProducts(filtered.slice(start, end));
+  }, [products, filters, pagination.page, pagination.limit]);
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -125,15 +251,23 @@ export default function ProductManager() {
     try {
       if (editingId) {
         await api.put(`/products/${editingId}`, payload);
+        alert("Product updated successfully!");
       } else {
-        await api.post("/products", payload);
+        const response = await api.post("/products", payload);
+        // Show success message with count if multiple products were created
+        if (response.data.count && response.data.count > 1) {
+          alert(`Successfully created ${response.data.count} products (one for each model)!`);
+        } else {
+          alert("Product created successfully!");
+        }
       }
       setForm(initialForm);
       setEditingId(null);
       setShowForm(false);
-      await fetchProducts();
+      await fetchAllProducts(); // Refresh all products
     } catch (err) {
       console.error(err);
+      alert(err.response?.data?.message || "Error saving product");
     } finally {
       setSubmitting(false);
     }
@@ -141,12 +275,23 @@ export default function ProductManager() {
 
   const handleEdit = (id) => {
     const product = products.find((p) => p._id === id);
+    
+    // Extract base product name (remove model name if present)
+    let baseName = product.name || "";
+    if (product.modelIds && product.modelIds.length > 0) {
+      // Remove the last model name from product name
+      const modelName = product.modelIds[0].name;
+      if (baseName.endsWith(` ${modelName}`)) {
+        baseName = baseName.replace(` ${modelName}`, "").trim();
+      }
+    }
+    
     setForm({
       id: product._id || "",
       brand: product.brandIds.map((b) => ({ label: b.name, value: b._id })),
       category: product.partCategoryId?._id || "",
       model: product.modelIds.map((m) => ({ label: m.name, value: m._id })),
-      name: product.name || "",
+      name: baseName, // Use base name without model
       price: product.price || "",
       description: product.description || "",
       tags: product.tags || [], // ✅ load tags
@@ -164,7 +309,12 @@ export default function ProductManager() {
     setDeletingId(pendingDeleteId);
     try {
       await api.delete(`/products/${pendingDeleteId}`);
+      // Remove from local state
       setProducts(products.filter((p) => p._id !== pendingDeleteId));
+      // Also update filtered products
+      setFilteredProducts(filteredProducts.filter((p) => p._id !== pendingDeleteId));
+      // Update pagination total
+      setPagination(prev => ({ ...prev, total: prev.total - 1 }));
     } catch (err) {
       console.error(err);
     } finally {
@@ -178,13 +328,92 @@ export default function ProductManager() {
     <div className="p-6  text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 min-h-screen transition-colors">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">📦 Product Manager</h2>
+        <h2 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">📚 Educational Content Manager</h2>
         <button
           onClick={() => setShowForm(true)}
           className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 rounded-lg text-white transition-colors"
         >
-          + Add Product
+          + Add Content
         </button>
+      </div>
+
+      {/* Filters */}
+      <div className="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          {/* Search */}
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Search Content
+            </label>
+            <input
+              type="text"
+              placeholder="Search by name, description, tags..."
+              value={filters.search}
+              onChange={(e) => {
+                setFilters({ ...filters, search: e.target.value });
+                setPagination({ ...pagination, page: 1 });
+              }}
+              className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-white dark:border-gray-600"
+            />
+          </div>
+
+          {/* Brand Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Filter by Brand
+            </label>
+            <select
+              value={filters.brandId}
+              onChange={(e) => {
+                setFilters({ ...filters, brandId: e.target.value });
+                setPagination({ ...pagination, page: 1 });
+              }}
+              className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-white dark:border-gray-600"
+            >
+              <option value="">All Brands</option>
+              {brands.map((brand) => (
+                <option key={brand._id} value={brand._id}>
+                  {brand.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Category Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Filter by Category
+            </label>
+            <select
+              value={filters.categoryId}
+              onChange={(e) => {
+                setFilters({ ...filters, categoryId: e.target.value });
+                setPagination({ ...pagination, page: 1 });
+              }}
+              className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-white dark:border-gray-600"
+            >
+              <option value="">All Categories</option>
+              {partCategory.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Clear Filters */}
+          <div className="flex items-end">
+            <button
+              onClick={() => {
+                setFilters({ search: "", brandId: "", categoryId: "", modelId: "" });
+                setPagination({ ...pagination, page: 1 });
+              }}
+              className="w-full px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Table */}
@@ -209,14 +438,14 @@ export default function ProductManager() {
               </tr>
             </thead>
             <tbody>
-              {products.length === 0 ? (
+              {filteredProducts.length === 0 ? (
                 <tr>
                   <td colSpan={10} className="text-center p-4 text-gray-500 dark:text-white italic">
-                    No products added yet.
+                    {products.length === 0 ? "No content added yet." : "No content matches your filters."}
                   </td>
                 </tr>
               ) : (
-                products.map((p) => (
+                filteredProducts.map((p) => (
                   <tr
                     key={p._id}
                     className="border-b border-gray-300  text-gray-700 dark:text-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
@@ -253,6 +482,92 @@ export default function ProductManager() {
               )}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* Pagination */}
+      {pagination.total > 0 && (
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
+              {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
+              {pagination.total} items
+            </div>
+            
+            {/* Items per page selector */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-700 dark:text-gray-300">Show:</span>
+              <select
+                value={pagination.limit}
+                onChange={(e) => {
+                  const newLimit = parseInt(e.target.value);
+                  setPagination({ ...pagination, limit: newLimit, page: 1 });
+                }}
+                className="px-3 py-2 border rounded-lg dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+              </select>
+              <span className="text-sm text-gray-700 dark:text-gray-300">per page</span>
+            </div>
+          </div>
+          
+          {pagination.total > pagination.limit && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
+                disabled={pagination.page === 1}
+                className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition"
+              >
+                Previous
+              </button>
+              
+              {/* Page Number Input */}
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-700 dark:text-gray-300">Page</span>
+                <input
+                  type="number"
+                  min="1"
+                  max={Math.ceil(pagination.total / pagination.limit)}
+                  value={pagination.page}
+                  onChange={(e) => {
+                    const pageNum = parseInt(e.target.value);
+                    if (pageNum >= 1 && pageNum <= Math.ceil(pagination.total / pagination.limit)) {
+                      setPagination({ ...pagination, page: pageNum });
+                    }
+                  }}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      const pageNum = parseInt(e.target.value);
+                      const maxPage = Math.ceil(pagination.total / pagination.limit);
+                      if (pageNum >= 1 && pageNum <= maxPage) {
+                        setPagination({ ...pagination, page: pageNum });
+                      } else {
+                        alert(`Please enter a page number between 1 and ${maxPage}`);
+                      }
+                    }
+                  }}
+                  className="w-16 px-2 py-2 text-center border rounded-lg dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">
+                  of {Math.ceil(pagination.total / pagination.limit)}
+                </span>
+              </div>
+              
+              <button
+                onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
+                disabled={pagination.page >= Math.ceil(pagination.total / pagination.limit)}
+                className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -412,7 +727,7 @@ export default function ProductManager() {
                   {submitting && (
                     <div className="w-4 h-4 border-2 border-white border-dashed rounded-full animate-spin"></div>
                   )}
-                  Save Product
+                  Save Content
                 </button>
               </div>
             </form>
@@ -423,8 +738,8 @@ export default function ProductManager() {
       {/* Confirm Delete */}
       <ConfirmDialog
         isOpen={confirmOpen}
-        title="Delete Product"
-        message="This action cannot be undone. Are you sure you want to delete this product?"
+        title="Delete Educational Content"
+        message="This action cannot be undone. Are you sure you want to delete this content?"
         onCancel={() => setConfirmOpen(false)}
         onConfirm={handleDelete}
       />
