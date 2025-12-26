@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { getBlogs } from "../../api/blogs";
 import Header from "../../components/Header";
 import Footer from "../../components/userComponents/Footer";
@@ -8,7 +7,6 @@ import SEO from "../../components/SEO";
 export default function BlogPage() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -68,7 +66,7 @@ export default function BlogPage() {
                 {blogs.map((blog) => (
                   <article
                     key={blog._id}
-                    onClick={() => navigate(`/blog/${blog._id}`)}
+                    onClick={() => window.open(`/blog/${blog._id}`, '_blank')}
                     className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-gray-200 dark:border-gray-700 active:scale-95 touch-manipulation"
                   >
                     {blog.image && (
@@ -98,7 +96,7 @@ export default function BlogPage() {
                 {blogs.map((blog) => (
                   <article
                     key={blog._id}
-                    onClick={() => navigate(`/blog/${blog._id}`)}
+                    onClick={() => window.open(`/blog/${blog._id}`, '_blank')}
                     className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer border border-gray-200 dark:border-gray-700 group"
                   >
                     {blog.image && (
