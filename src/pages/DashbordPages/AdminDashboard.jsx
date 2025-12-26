@@ -9,6 +9,8 @@ const AdminDashboard = () => {
   const [error, setError] = useState("");
   const [revenue, setRevenue] = useState({ totalRevenue: 0, totalPayments: 0, totalSubscriptions: 0 });
   const [revenueLoading, setRevenueLoading] = useState(true);
+  const [trialUsers, setTrialUsers] = useState({ trialUsersCount: 0, totalTrialSubscriptions: 0 });
+  const [trialLoading, setTrialLoading] = useState(true);
 
   // For confirmation modal
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -64,9 +66,26 @@ const AdminDashboard = () => {
     }
   };
 
+  // Fetch trial users count
+  const fetchTrialUsers = async () => {
+    try {
+      setTrialLoading(true);
+      const res = await api.get("/admin/trial-users", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setTrialUsers(res.data || { trialUsersCount: 0, totalTrialSubscriptions: 0 });
+      setTrialLoading(false);
+    } catch (err) {
+      console.error("Error fetching trial users:", err);
+      setTrialUsers({ trialUsersCount: 0, totalTrialSubscriptions: 0 });
+      setTrialLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
     fetchRevenue();
+    fetchTrialUsers();
   }, []);
 
   // Open confirmation modal
@@ -112,17 +131,18 @@ const AdminDashboard = () => {
           onClick={() => {
             fetchUsers();
             fetchRevenue();
+            fetchTrialUsers();
           }}
-          disabled={loading || revenueLoading}
+          disabled={loading || revenueLoading || trialLoading}
           className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {(loading || revenueLoading) ? "Loading..." : "Refresh"}
+          {(loading || revenueLoading || trialLoading) ? "Loading..." : "Refresh"}
         </button>
       </div>
 
       {/* Stats Cards */}
       {!loading && !error && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
             <h3 className="text-gray-600 dark:text-gray-400 text-sm font-medium">Total Users</h3>
             <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">{users.length}</p>
@@ -139,6 +159,19 @@ const AdminDashboard = () => {
               {users.filter(u => u.role === "user").length}
             </p>
           </div>
+          <div className="bg-gradient-to-br from-orange-500 to-yellow-500 p-6 rounded-lg shadow-md text-white">
+            <h3 className="text-white text-sm font-medium opacity-90">Trial Users</h3>
+            <p className="text-3xl font-bold mt-2">
+              {trialLoading ? (
+                <span className="text-2xl">...</span>
+              ) : (
+                trialUsers.trialUsersCount
+              )}
+            </p>
+            <p className="text-sm mt-2 opacity-80">
+              {trialUsers.totalTrialSubscriptions} trial subscriptions
+            </p>
+          </div>
           <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-6 rounded-lg shadow-md text-white">
             <h3 className="text-white text-sm font-medium opacity-90">Total Revenue</h3>
             <p className="text-3xl font-bold mt-2">
@@ -149,7 +182,7 @@ const AdminDashboard = () => {
               )}
             </p>
             <p className="text-sm mt-2 opacity-80">
-              {revenue.totalPayments} payments • {revenue.totalSubscriptions} subscriptions
+              {revenue.totalPayments} payments (excl. trial)
             </p>
           </div>
         </div>

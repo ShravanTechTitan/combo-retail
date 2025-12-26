@@ -27,12 +27,25 @@ export default function UserSubscriptions() {
     ).values()
   );
   
-// Avoid duplicates in available plans
-const availablePlans = plans.filter(
-  (plan) =>
-    !activeSubscriptions.some((sub) => sub.plan._id === plan._id) &&
-    !expiredSubscriptions.some((sub) => sub.plan._id === plan._id)
-);
+  // Check if user has already used trial plan (any trial subscription in history)
+  const hasUsedTrial = userSubscriptions.some(
+    (sub) => sub.plan && sub.plan.duration === "trial24Hours"
+  );
+
+  // Avoid duplicates in available plans
+  // Also exclude trial plan if user has already used it
+  const availablePlans = plans.filter(
+    (plan) => {
+      // If user has used trial, exclude trial plan from available plans
+      if (hasUsedTrial && (plan.duration === "trial24Hours" || plan.price === 0)) {
+        return false;
+      }
+      return (
+        !activeSubscriptions.some((sub) => sub.plan._id === plan._id) &&
+        !expiredSubscriptions.some((sub) => sub.plan._id === plan._id)
+      );
+    }
+  );
 
 
   // Check expiry + auto logout
@@ -143,6 +156,36 @@ const getExpiryTimeLeft = (endDate) => {
       setSubscribing(plan._id);
       Swal.fire({ title: "Processing...", didOpen: () => Swal.showLoading() });
 
+      // ✅ Check if it's a free trial plan (price = 0)
+      if (plan.price === 0 || plan.duration === "trial24Hours") {
+        try {
+          const response = await api.post("/payments/activate-trial", {
+            planId: plan._id,
+            userId,
+          });
+
+          Swal.fire("Success", "Your free trial is now active!", "success");
+          fetchPlans();
+          fetchUserSubscriptions();
+        } catch (err) {
+          const errorMsg = err.response?.data?.message || "Failed to activate trial";
+          if (err.response?.data?.alreadyUsedTrial) {
+            Swal.fire({
+              icon: "warning",
+              title: "Trial Already Used",
+              text: errorMsg,
+              confirmButtonText: "View Plans",
+            });
+          } else {
+            Swal.fire("Error", errorMsg, "error");
+          }
+        } finally {
+          setSubscribing(null);
+        }
+        return;
+      }
+
+      // For paid plans, use Razorpay
       const { data } = await api.post("/payments/create-order", {
         planId: plan._id,
       });
@@ -183,7 +226,22 @@ const getExpiryTimeLeft = (endDate) => {
       rzp.open();
     } catch (err) {
       console.error("Subscription error:", err);
-      Swal.fire("Error", "Something went wrong! Check console.", "error");
+      if (err.response?.data?.isFreePlan) {
+        // If backend says it's a free plan, try activating trial
+        try {
+          await api.post("/payments/activate-trial", {
+            planId: plan._id,
+            userId,
+          });
+          Swal.fire("Success", "Your free trial is now active!", "success");
+          fetchPlans();
+          fetchUserSubscriptions();
+        } catch (trialErr) {
+          Swal.fire("Error", trialErr.response?.data?.message || "Failed to activate trial", "error");
+        }
+      } else {
+        Swal.fire("Error", err.response?.data?.message || "Something went wrong!", "error");
+      }
     } finally {
       setSubscribing(null);
     }
