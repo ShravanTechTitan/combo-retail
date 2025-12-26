@@ -21,6 +21,7 @@ import Subscribe from "./pages/userpages/Subscribe.jsx";
 import AdminSubscriptions from "./pages/DashbordPages/AdminSubscriptions.jsx";
 import Blogs from "./pages/DashbordPages/Blogs.jsx";
 import BlogPage from "./pages/userpages/BlogPage.jsx";
+import BlogDetailPage from "./pages/userpages/BlogDetailPage.jsx";
 import Contact from "./pages/userpages/Contact.jsx";
 import UserProfile from "./pages/userpages/Profile.jsx";
 import ProtectedRoute from "./components/userComponents/ProtectedRoute.jsx";
@@ -74,6 +75,7 @@ function App() {
         <Route path="/combo/:id/:modelId" element={<ModelPage />} /> {/* Level 3 */}
         <Route path="/models/:brand/:brandId" element={<ModelDetails />} />
         <Route path="/blogs" element={<BlogPage />} />
+        <Route path="/blog/:id" element={<BlogDetailPage />} />
          <Route path="/contact" element={<Contact />} />
         <Route path="/models/:brand/:brandId/:partCategoryName/:partCategoryId" element={ <ProtectedRoute user={user} ><PartDetails /></ProtectedRoute>} />
          <Route path="/product/:id" element={ <ProtectedRoute user={user} ><ProductPage /></ProtectedRoute>} />

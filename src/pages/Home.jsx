@@ -137,7 +137,7 @@ export default function Home() {
               Explore by <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">Brand</span>
             </h2>
             <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-2">
-              Browse spare parts and universal combos for your favorite mobile brands
+              Browse spare parts and universal combos for your favorFind Universal Combo and Spare Parts According to Mobile Brands.ite mobile brands
             </p>
           </div>
 
@@ -200,13 +200,13 @@ export default function Home() {
               Why Choose <span className="bg-gradient-to-r from-green-500 to-emerald-600 text-transparent bg-clip-text">Universal Combo</span>?
             </h2>
             <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-2">
-              Everything you need for mobile repair and spare parts management in one place
+            Everything you need for mobile repair and spear parts <b>Knowledge</b> in one place.
             </p>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {[
-              { icon: "🔍", title: "Easy Search", desc: "Find parts quickly with our advanced search" },
+              { icon: "🔍", title: "Easy Search", desc: "Find universal combo with our advanced search" },
               { icon: "📱", title: "All Brands", desc: "Support for all major mobile brands" },
               { icon: "📚", title: "Knowledge Base", desc: "Comprehensive guides and tutorials" },
               { icon: "⚡", title: "Fast Access", desc: "Quick access to compatibility information" }
@@ -287,7 +287,8 @@ export default function Home() {
                   {blogs.slice(0, 2).map((blog) => (
                     <article
                       key={blog._id}
-                      className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-200 dark:border-gray-700"
+                      onClick={() => navigate(`/blog/${blog._id}`)}
+                      className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-200 dark:border-gray-700 cursor-pointer active:scale-95 touch-manipulation"
                     >
                       {blog.image && (
                         <img
@@ -316,7 +317,8 @@ export default function Home() {
                   {blogs.slice(0, 5).map((blog) => (
                     <article
                       key={blog._id}
-                      className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-200 dark:border-gray-700 group"
+                      onClick={() => navigate(`/blog/${blog._id}`)}
+                      className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-200 dark:border-gray-700 group cursor-pointer"
                     >
                       {blog.image && (
                         <div className="overflow-hidden">
@@ -380,9 +382,9 @@ export default function Home() {
               </p>
               
               {/* Benefits - Mobile Stack */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8 text-left max-w-2xl mx-auto">
+              <div className="flex flex-col sm:grid sm:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8 max-w-2xl mx-auto">
                 {["Premium Content", "Expert Guides", "Priority Support"].map((benefit, index) => (
-                  <div key={index} className="flex items-center gap-2 bg-white bg-opacity-20 rounded-lg p-2 sm:p-3 backdrop-blur-sm">
+                  <div key={index} className="flex items-center gap-2 bg-white bg-opacity-20 rounded-lg p-2 sm:p-3 backdrop-blur-sm w-full">
                     <span className="text-lg sm:text-xl flex-shrink-0">✓</span>
                     <span className="text-xs sm:text-sm font-medium">{benefit}</span>
                   </div>

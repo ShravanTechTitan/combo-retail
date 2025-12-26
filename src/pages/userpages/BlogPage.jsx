@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getBlogs } from "../../api/blogs";
 import Header from "../../components/Header";
 import Footer from "../../components/userComponents/Footer";
@@ -7,6 +8,7 @@ import SEO from "../../components/SEO";
 export default function BlogPage() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -64,9 +66,10 @@ export default function BlogPage() {
               {/* Mobile Layout: 1 column */}
               <div className="grid grid-cols-1 gap-6 md:hidden">
                 {blogs.map((blog) => (
-                  <div
+                  <article
                     key={blog._id}
-                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+                    onClick={() => navigate(`/blog/${blog._id}`)}
+                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-gray-200 dark:border-gray-700 active:scale-95 touch-manipulation"
                   >
                     {blog.image && (
                       <img
@@ -82,40 +85,43 @@ export default function BlogPage() {
                       <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
                         {blog.title}
                       </h3>
-                      <p className="text-gray-600 dark:text-gray-300">
+                      <p className="text-gray-600 dark:text-gray-300 line-clamp-4">
                         {blog.description}
                       </p>
                     </div>
-                  </div>
+                  </article>
                 ))}
               </div>
 
               {/* Desktop Layout: 2-3 columns */}
               <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {blogs.map((blog) => (
-                  <div
+                  <article
                     key={blog._id}
-                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+                    onClick={() => navigate(`/blog/${blog._id}`)}
+                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer border border-gray-200 dark:border-gray-700 group"
                   >
                     {blog.image && (
-                      <img
-                        src={blog.image}
-                        alt={blog.title}
-                        className="w-full h-64 object-cover"
-                        onError={(e) => {
-                          e.target.src = "/UniversalCombo.jpg";
-                        }}
-                      />
+                      <div className="overflow-hidden">
+                        <img
+                          src={blog.image}
+                          alt={blog.title}
+                          className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.src = "/UniversalCombo.jpg";
+                          }}
+                        />
+                      </div>
                     )}
                     <div className="p-6">
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                         {blog.title}
                       </h3>
                       <p className="text-gray-600 dark:text-gray-300 line-clamp-4">
                         {blog.description}
                       </p>
                     </div>
-                  </div>
+                  </article>
                 ))}
               </div>
             </>
