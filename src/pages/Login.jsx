@@ -44,8 +44,20 @@ export default function AuthPage() {
         localStorage.setItem("role", data.role);
         showToast(`${isLogin ? "Login" : "Signup"} successful! 🎉`);
 
-        // ✅ redirect to previous page after short delay
-        setTimeout(() => navigate(from, { replace: true }), 1200);
+        // ✅ redirect based on role
+        setTimeout(() => {
+          const role = data.role || localStorage.getItem("role");
+          if (role === "admin" || role === "superadmin") {
+            // If trying to access dashboard or already on dashboard route, go to dashboard
+            if (from.includes("/dashboard") || from === "/") {
+              navigate("/dashboard", { replace: true });
+            } else {
+              navigate(from, { replace: true });
+            }
+          } else {
+            navigate(from, { replace: true });
+          }
+        }, 1200);
       }
     } catch (err) {
       setError(err.response?.data?.message || err.message || "Something went wrong!");

@@ -2,6 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Sidebar from "../../components/dashboardComponents/Sidebar";
 import DashboardHeader from "../../components/dashboardComponents/DashboardHeader";
+import ProtectedAdminRoute from "../../components/dashboardComponents/ProtectedAdminRoute";
 
 export default function DashboardLayout() {
   const [open, setOpen] = useState(true);
@@ -9,19 +10,23 @@ export default function DashboardLayout() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("id");
+    localStorage.removeItem("email");
     navigate("/");
   };
 
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
-      <Sidebar open={open} handleLogout={handleLogout} />
-      <div className="flex flex-col flex-1">
-        <DashboardHeader open={open} setOpen={setOpen} />
-        <main className="p-4 md:p-6 flex-1 overflow-auto text-gray-900 Dark:text-white">
-          <Outlet />
-        </main>
-
+    <ProtectedAdminRoute>
+      <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
+        <Sidebar open={open} handleLogout={handleLogout} />
+        <div className="flex flex-col flex-1">
+          <DashboardHeader open={open} setOpen={setOpen} />
+          <main className="p-4 md:p-6 flex-1 overflow-auto text-gray-900 Dark:text-white">
+            <Outlet />
+          </main>
+        </div>
       </div>
-    </div>
+    </ProtectedAdminRoute>
   );
 }

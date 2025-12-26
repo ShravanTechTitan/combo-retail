@@ -20,10 +20,25 @@ export default function AdminSubscriptions() {
   const [deleteId, setDeleteId] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
+  // Format duration for display
+  const formatDuration = (duration) => {
+    const map = {
+      trial24Hours: "24 Hours Trial",
+      sevenDays: "7 Days",
+      perMonth: "1 Month",
+      sixMonths: "6 Months",
+      perYear: "1 Year",
+      eighteenMonths: "18 Months",
+      testing: "7 Days", // Legacy support
+    };
+    return map[duration] || duration;
+  };
+
   const fetchPlans = async () => {
     setLoading(true);
     try {
-      const res = await api.get("/subscriptions");
+      // Fetch all subscriptions including inactive ones for admin
+      const res = await api.get("/subscriptions?admin=true");
       setPlans(res.data);
     } catch (err) {
       console.error("Error fetching subscriptions:", err);
@@ -134,7 +149,7 @@ export default function AdminSubscriptions() {
                 >
                   <td className="py-3 px-4">{plan.name}</td>
                   <td className="py-3 px-4">
-                    ₹{plan.price} ({plan.duration})
+                    ₹{plan.price} ({formatDuration(plan.duration)})
                   </td>
                   <td className="py-3 px-4">
                     <span
@@ -231,7 +246,8 @@ export default function AdminSubscriptions() {
                   onChange={handleChange}
                   className="w-full px-3 py-2 rounded-lg border dark:bg-gray-700 dark:text-white"
                 >
-                  <option value="testing">Testing</option>
+                  <option value="trial24Hours">24 Hours Trial</option>
+                  <option value="sevenDays">7 Days Plan</option>
                   <option value="perMonth">Per Month</option>
                   <option value="sixMonths">6 Months</option>
                   <option value="perYear">Per Year</option>

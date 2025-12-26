@@ -90,6 +90,9 @@ const availablePlans = plans.filter(
       sixMonths: "6 Months",
       perYear: "1 Year",
       eighteenMonths: "18 Months",
+      sevenDays: "7 Days",
+      trial24Hours: "24 Hours Trial",
+      testing: "7 Days", // Legacy support
     };
     return map[duration] || duration;
   };

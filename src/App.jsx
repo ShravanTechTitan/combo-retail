@@ -60,6 +60,7 @@ function App() {
       <Route path="/" element={<Home />} />
          <Route path="/login" element={<Login />} />
       <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route index element={<AdminDashboard />} />
         <Route path="adminDashboard" element={<AdminDashboard></AdminDashboard>}></Route>
         <Route path="deviceCategories" element={<DeviceCategories/>}></Route>
         <Route path="partCategories" element={<PartCategories/>}></Route>
